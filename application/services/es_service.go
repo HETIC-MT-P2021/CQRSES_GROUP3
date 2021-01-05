@@ -68,7 +68,7 @@ func mapSearchResults(response *esapi.Response) *[]SearchResult {
 	}
 	// Print the response status, number of results.
 	log.Printf(
-		"[%s] %d hits; took: %dms",
+		"[%s] %d hits;",
 		response.Status(),
 		int(body["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64)),
 	)
