@@ -18,8 +18,16 @@ Update your environment. Create a `.env` file thanks to the `.env.dist` example.
 build app :
 
 ```sh
+    make run
+
+    # OR
+
     docker-compose up --build
 ```
+
+## Tests
+
+You can run tests using the `make test` command.
 
 ## Branch naming convention
 
