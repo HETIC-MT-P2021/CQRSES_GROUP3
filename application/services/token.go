@@ -71,7 +71,7 @@ func GenerateToken(email string) (string, error) {
 		return "", errors.New("Couldn't init rsa keys")
 	}
 
-	validTime,_ := strconv.ParseInt(config.GoDotEnvVariable("TOKEN_VALID_DURATION"), 10, 64)
+	validTime, _ := strconv.ParseInt(config.GoDotEnvVariable("TOKEN_VALID_DURATION"), 10, 64)
 	// Generate Expiration date
 	expirationTime := time.Now().Add(time.Duration(validTime) * time.Minute)
 

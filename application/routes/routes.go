@@ -15,5 +15,11 @@ func Init(r *gin.Engine) {
 	api.Use(middlewares.CheckAuthorization)
 	{
 		api.GET("/", controllers.TestController)
+
+		// V1
+		v1 := api.Group("/v1")
+		v1.GET("/search", controllers.TestSearchService)
 	}
+	//test
+	r.GET("/search", controllers.TestSearchService)
 }

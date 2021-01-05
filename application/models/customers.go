@@ -24,7 +24,7 @@ type CustomerForm struct {
 
 // CustomerJSON is the struct to return user without the hash password
 type CustomerJSON struct {
-	ID uint64
+	ID          uint64
 	Name, Email string
 }
 

@@ -29,11 +29,10 @@ func Init(cfg Config) error {
 	var tmpDb *gorm.DB
 	var err error
 
-
 	// Try connecting database 5 times
 	for test := 1; test <= 5; test++ {
 		tmpDb, err = gorm.Open("postgres", dbURL)
-		
+
 		if err != nil {
 			log.Warn("db connection failed. (%s/5)", test)
 			time.Sleep(5 * time.Second)

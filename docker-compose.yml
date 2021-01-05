@@ -37,7 +37,6 @@ services:
     
   adminer:
     image: adminer
-    restart: always
     ports:
       - 8080:8080
     depends_on:
@@ -61,6 +60,8 @@ services:
         soft: -1
         hard: -1
     mem_limit: 1g
+    networks:
+      - backend
 
 volumes:
   api:
