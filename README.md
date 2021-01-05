@@ -1,16 +1,8 @@
-# go-boilerplate
+# CQRSES_GROUP3
 
-A go boilerplate with docker-compose with hot reload, postgres, orm, github templates, license...
+A repository to train on event sourcing, CQRS and DDD.
 
-## Setup
-
-Modify the `docker/go/Dockerfile` file and set the following line with the correct repository name :
-
-`WORKDIR /go/src/github.com/edwinvautier/go-bot`
-
-Do the same in the `docker-compose.yml` inside the api volumes part.
-
-## Project setup 
+## Project setup
 
 Generate RSA keys for the token authentication :
 

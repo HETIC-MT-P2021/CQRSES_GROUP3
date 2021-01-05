@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/edwinvautier/go-boilerplate/models"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/models"
 	log "github.com/sirupsen/logrus"
 )
 

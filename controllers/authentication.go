@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/edwinvautier/go-boilerplate/config"
-	"github.com/edwinvautier/go-boilerplate/models"
-	"github.com/edwinvautier/go-boilerplate/repositories"
-	"github.com/edwinvautier/go-boilerplate/services"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/config"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/models"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/repositories"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/services"
 	"github.com/gin-gonic/gin"
 )
 

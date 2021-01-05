@@ -9,7 +9,7 @@ services:
       - 8000:8000 
     restart: on-failure
     volumes:
-      - ./:/go/src/github.com/edwinvautier/go-boilerplate
+      - ./:/go/src/github.com/HETIC-MT-P2021/CQRSES_GROUP3
     depends_on:
       - postgres          
     networks:

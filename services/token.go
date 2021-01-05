@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/edwinvautier/go-boilerplate/config"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/config"
 	"strconv"
 	"errors"
 	"io/ioutil"

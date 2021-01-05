@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/edwinvautier/go-boilerplate/models"
 	"testing"
+
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/models"
 )
 
 func TestValidateCustomer(t *testing.T) {
@@ -15,45 +16,45 @@ func TestValidateCustomer(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "empty name", 
+			name: "empty name",
 			args: args{
 				&models.CustomerForm{
-					Name: "",
+					Name:     "",
 					Password: "tesT12345",
-					Email: "bob@gmail.com",
+					Email:    "bob@gmail.com",
 				},
 			},
 			wantErr: true,
 		},
 		{
-			name: "wrong email", 
+			name: "wrong email",
 			args: args{
 				&models.CustomerForm{
-					Name: "Bob",
+					Name:     "Bob",
 					Password: "tesT12345",
-					Email: "bobgmail.com",
+					Email:    "bobgmail.com",
 				},
 			},
 			wantErr: true,
 		},
 		{
-			name: "wrong password", 
+			name: "wrong password",
 			args: args{
 				&models.CustomerForm{
-					Name: "Bob",
+					Name:     "Bob",
 					Password: "test",
-					Email: "bob@gmail.com",
+					Email:    "bob@gmail.com",
 				},
 			},
 			wantErr: true,
 		},
 		{
-			name: "correct customer", 
+			name: "correct customer",
 			args: args{
 				&models.CustomerForm{
-					Name: "Bob",
+					Name:     "Bob",
 					Password: "tesT12345",
-					Email: "bob@gmail.com",
+					Email:    "bob@gmail.com",
 				},
 			},
 			wantErr: false,

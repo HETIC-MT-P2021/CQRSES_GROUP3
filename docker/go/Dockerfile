@@ -8,7 +8,7 @@ FROM golang:1.15-alpine
 RUN apk update && apk add --no-cache git
 
 # Set the current working directory inside the container
-WORKDIR /go/src/github.com/edwinvautier/go-boilerplate
+WORKDIR /go/src/github.com/HETIC-MT-P2021/CQRSES_GROUP3
 
 # Copy the source from the current directory to the working Directory inside the container
 COPY . .

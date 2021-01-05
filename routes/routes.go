@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/edwinvautier/go-boilerplate/middlewares"
-	"github.com/edwinvautier/go-boilerplate/controllers"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/middlewares"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/controllers"
 	"github.com/gin-gonic/gin"
 )
 

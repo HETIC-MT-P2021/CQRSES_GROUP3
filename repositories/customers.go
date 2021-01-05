@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"github.com/edwinvautier/go-boilerplate/database"
-	"github.com/edwinvautier/go-boilerplate/models"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/database"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/models"
 )
 
 // PersistCustomer is used to persist user objects to database
