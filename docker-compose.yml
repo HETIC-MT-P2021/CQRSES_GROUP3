@@ -4,7 +4,7 @@ services:
   api:
     build: 
       context: .
-      dockerfile: docker/go/Dockerfile
+      dockerfile: application/docker/go/Dockerfile
     ports: 
       - 8000:8000 
     restart: on-failure

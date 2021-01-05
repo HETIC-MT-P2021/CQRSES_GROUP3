@@ -8,10 +8,10 @@ import (
 
 	"time"
 
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/database"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/helpers"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/routes"
 	"github.com/caarlos0/env"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/database"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/helpers"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/routes"
 	"github.com/gin-gonic/gin"
 	cors "github.com/itsjamie/gin-cors"
 	log "github.com/sirupsen/logrus"

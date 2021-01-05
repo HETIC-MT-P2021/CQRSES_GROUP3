@@ -1,8 +1,8 @@
 package database
 
 import (
-	"time"
 	"fmt"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"

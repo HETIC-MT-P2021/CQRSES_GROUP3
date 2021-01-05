@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/config"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/models"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/repositories"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/services"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/config"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/models"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/repositories"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/services"
 	"github.com/gin-gonic/gin"
 )
 

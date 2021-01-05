@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/database"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/models"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/database"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/models"
 )
 
 // PersistCustomer is used to persist user objects to database

@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/repositories"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/services"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/repositories"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/services"
 	"net/http"
 
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/models"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,9 +24,9 @@ func CreateCustomer(c *gin.Context) {
 	}
 
 	// Create customer object and persist it to db
-	customer := models.Customer {
-		Name: customerForm.Name,
-		Email: customerForm.Email,
+	customer := models.Customer{
+		Name:           customerForm.Name,
+		Email:          customerForm.Email,
 		HashedPassword: services.HashPassword(customerForm.Password),
 	}
 

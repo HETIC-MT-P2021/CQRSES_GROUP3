@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/models"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/models"
 	log "github.com/sirupsen/logrus"
 )
 

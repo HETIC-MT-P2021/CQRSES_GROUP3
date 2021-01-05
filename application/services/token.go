@@ -1,10 +1,10 @@
 package services
 
 import (
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/config"
-	"strconv"
 	"errors"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/config"
 	"io/ioutil"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"

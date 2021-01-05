@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/middlewares"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/controllers"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/controllers"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
