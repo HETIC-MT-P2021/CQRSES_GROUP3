@@ -25,10 +25,12 @@ func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchRes
 	client, err := database.GetESClient()
 	if err != nil {
 		log.Error("Could not get elastic search client: %v", err)
+		return nil
 	}
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
 		log.Error("Error encoding query: %s", err)
+		return nil
 	}
 	response, err := client.Search(
 		client.Search.WithContext(context.Background()),
@@ -39,6 +41,7 @@ func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchRes
 	)
 	if err != nil {
 		log.Fatalf("Error getting response: %s", err)
+		return nil
 	}
 	prettifyNotFoundError(response)
 
@@ -47,15 +50,15 @@ func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchRes
 
 func prettifyNotFoundError(response *esapi.Response)  {
 	if response.IsError() {
-		var error map[string]interface{}
-		if err := json.NewDecoder(response.Body).Decode(&error); err != nil {
+		var body map[string]interface{}
+		if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
 			log.Fatal("Error parsing the response body: %s", err)
 		} else {
 			// Print the response status and error information.
 			log.Fatal("[%s] %s: %s",
 				response.Status(),
-				error["error"].(map[string]interface{})["type"],
-				error["error"].(map[string]interface{})["reason"],
+				body["error"].(map[string]interface{})["type"],
+				body["error"].(map[string]interface{})["reason"],
 			)
 		}
 	}
@@ -65,6 +68,7 @@ func mapSearchResults(response *esapi.Response) *[]SearchResult {
 	var body map[string]interface{}
 	if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
 		log.Fatal("Error parsing the response body: %s", err)
+		return nil
 	}
 	// Print the response status, number of results.
 	log.Printf(
