@@ -7,7 +7,7 @@ import (
 
 // PersistCustomer is used to persist user objects to database
 func PersistCustomer(customer *models.Customer) error {
-	
+
 	if err := database.Db.Debug().Create(&customer).Error; err != nil {
 		return err
 	}

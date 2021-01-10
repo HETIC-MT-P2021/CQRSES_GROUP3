@@ -1,8 +1,8 @@
 package services
 
 import (
-	"fmt"
 	"crypto/sha512"
+	"fmt"
 )
 
 // HashPassword takes a string in parameter and returns the same string hashed with sha512
