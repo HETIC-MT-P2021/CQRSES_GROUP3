@@ -21,7 +21,9 @@ func GetESClient(escfg *EsCfg) {
 		elastic.SetHealthcheckInterval(5*time.Second),
 	)
 	if err != nil {
-		log.Error("Cannot connect to ")
+		log.Error("Cannot connect to elastic search")
+	} else {
+		log.Info("Connected to elastic search")
 	}
 
 	EsClient = client
