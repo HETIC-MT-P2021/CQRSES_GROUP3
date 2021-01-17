@@ -7,7 +7,19 @@ import (
 )
 
 func TestSearchService(c *gin.Context) {
-	searchResults := services.SearchWithKeyword("articles", "name", "jack", 10)
-	c.JSON(http.StatusOK, searchResults)
+	// How to build a query
+	_ = map[string]interface{}{
+		"query": map[string]interface{}{
+			"match": map[string]interface{}{
+				"name": "jack",
+			},
+		},
+	}
+	doc, err := services.GetDocumentById("articles", "Cuw3EncB4DCj_NoRaliY")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, doc)
 	return
 }

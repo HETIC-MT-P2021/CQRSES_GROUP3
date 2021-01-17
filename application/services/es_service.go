@@ -1,90 +1,91 @@
 package services
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/helpers"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
-	"github.com/olivere/elastic/v7"
 	log "github.com/sirupsen/logrus"
-	"reflect"
+	"strconv"
+	"strings"
 )
 
 type EsConnector struct {
 }
 
-// EsService interface.
 type EsService interface {
-	SearchWithKeyword(index string, field string, value interface{}, limit int) *[]SearchResult
+	SearchWithKeyword(index string, query map[string]interface{})
 	CreateNewIndex(index string) error
 	CreateNewDocumentInIndex(index string, document *Document) (*Document ,error)
 	GetDocumentById(index string, id string) (*Document, error)
 }
 
-// SearchResult used to gather results of elastic search calls
 type SearchResult struct {
 	ID   interface{}
 	Body interface{}
 }
 
 type Document struct {
-	ID uint64
+	ID   string
 	Body interface{}
 }
 
-type Article struct {
-	Name string
-}
-
-// SearchWithKeyword allow you to search in elastic search by passing the desired index and keywords.
-// Calls mapSearchResults.
-// Returns a slice of SearchResult struct or nil.
-func SearchWithKeyword(index string, field string, value interface{}, limit int) *[]SearchResult {
-	client := database.EsClient
-	terms := elastic.NewTermQuery(field, value)
-	response, err := client.Search().
-		Index(index).
-		Query(terms).
-		From(0).
-		Size(limit).
-		Pretty(true).
-		Do(context.Background())
+func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchResult {
+	client, err := database.GetOriginalESClient()
 	if err != nil {
-		log.Fatalf("Error getting response: %s", err)
+		log.Error("cannot get elastic original client.")
 		return nil
 	}
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		log.Error("Error encoding query: %s", err)
+	}
+	response, err := client.Search(
+		client.Search.WithContext(context.Background()),
+		client.Search.WithIndex(index),
+		client.Search.WithBody(&buf),
+		client.Search.WithTrackTotalHits(true),
+		client.Search.WithPretty(),
+		client.Search.WithSize(10),
+	)
+	if err != nil {
+		log.Fatalf("Error getting response: %s", err)
+	}
 	prettifyNotFoundError(response)
-	var article Article
-	for _, item := range response.Each(reflect.TypeOf(article)) {
-		if t, ok := item.(Article); ok {
-			log.Info("Article by %s", t.Name)
+
+	return mapSearchResults(response)
+}
+
+func prettifyNotFoundError(response *esapi.Response)  {
+	if response.IsError() {
+		var error map[string]interface{}
+		if err := json.NewDecoder(response.Body).Decode(&error); err != nil {
+			log.Fatal("Error parsing the response body: %s", err)
+		} else {
+			// Print the response status and error information.
+			log.Fatal("[%s] %s: %s",
+				response.Status(),
+				error["error"].(map[string]interface{})["type"],
+				error["error"].(map[string]interface{})["reason"],
+			)
 		}
 	}
-	//return mapSearchResults(response)
-	return nil
 }
 
-// prettifyNotFoundError returns an human readable error with a reason and type.
-func prettifyNotFoundError(response *elastic.SearchResult)  {
-	if response.Error != nil {
-		log.Error("Error on search query: %v", response)
-	}
-}
-
-// mapSearchResults map the results gathered from elastic search call and map them to a slice of SearchResult struct.
 func mapSearchResults(response *esapi.Response) *[]SearchResult {
 	var body map[string]interface{}
 	if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
 		log.Fatal("Error parsing the response body: %s", err)
-		return nil
 	}
-	// Print the response status, number of results.
+	// Print the response status, number of results, and request duration.
 	log.Printf(
-		"[%s] %d hits;",
+		"[%s] %d hits; took: %dms",
 		response.Status(),
 		int(body["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64)),
+		int(body["took"].(float64)),
 	)
 	var searchResultList []SearchResult
 	// Print the ID and document source for each hit.
@@ -105,7 +106,7 @@ func CreateNewIndex(index string) error {
 	client := database.EsClient
 	ctx := context.Background()
 	exists, err := client.IndexExists(index).Do(ctx)
-	if !exists {
+	if exists {
 		log.Error("Index exist already: %s", index)
 		return errors.New("index exist already")
 	}
@@ -132,7 +133,8 @@ func CreateNewDocumentInIndex(index string, document *Document) (*Document ,erro
 		log.Error("cannot insert document in index %s", index)
 		return nil, errors.New( "cannot insert document in index: " + index)
 	}
-	document.ID = helpers.ParseStringToUint64(inserted.Id)
+	log.Info(helpers.ParseStringToUint64(inserted.Id))
+	document.ID = inserted.Id
 
 	return document, nil
 }
@@ -158,11 +160,30 @@ func GetDocumentById(index string, id string) (*Document, error) {
 		log.Error("error while writing document")
 		return nil, errors.New( "error while writing document")
 	}
-	parsedId := helpers.ParseStringToUint64(document.Id)
 	doc := Document{
-		ID: parsedId,
+		ID: document.Id,
 		Body: document.Source,
 	}
 
 	return &doc, nil
+}
+
+func constructQuery(keyword string, size int) *strings.Reader {
+	var query = `{"query": {`
+	query = query + keyword
+	query = query + `}, "size": ` + strconv.Itoa(size) + `}`
+	log.Info("\nquery:", query)
+	isValid := json.Valid([]byte(query)) // returns bool
+	if isValid == false {
+		log.Info("query string not valid:", query)
+		log.Info("Using default match_all query")
+		query = "{}"
+	} else {
+		log.Info("valid JSON:", isValid)
+	}
+	var b strings.Builder
+	b.WriteString(query)
+	read := strings.NewReader(b.String())
+
+	return read
 }
