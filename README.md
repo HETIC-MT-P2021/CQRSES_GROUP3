@@ -7,6 +7,8 @@ A repository to train on event sourcing, CQRS and DDD.
 Generate RSA keys for the token authentication :
 
 ```sh
+    make init 
+    #or
     # use the following password: private_key
     openssl genrsa -des3 -out private.pem 2048
     openssl rsa -in private.pem -outform PEM -pubout -out public.pem
