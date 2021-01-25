@@ -29,6 +29,7 @@ func PersistArticle(articleForm *models.ArticleForm) error {
 			Typology: es.Create,
 			Payload: article,
 			CreatedAt: time.Now(),
+			Index: 1,					// First event for this article so the index should be 1
 		},
 	}
 		

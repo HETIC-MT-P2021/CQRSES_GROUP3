@@ -10,6 +10,7 @@ type Event struct {
 	Typology	Typology
 	Payload		interface{}
 	CreatedAt	time.Time
+	Index		uint
 }
 
 // Typology of an event

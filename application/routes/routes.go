@@ -19,6 +19,7 @@ func Init(r *gin.Engine) {
 		// V1
 		v1 := api.Group("/v1")
 		v1.GET("/search", controllers.TestSearchService)
+		v1.POST("/articles", controllers.CreateArticle)
 	}
 	//test
 	r.GET("/search", controllers.TestSearchService)
