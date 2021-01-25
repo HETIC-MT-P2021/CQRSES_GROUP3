@@ -31,6 +31,8 @@ func main() {
 
 	// Setup router
 	router := gin.Default()
+	ecfg := database.EsCfg{Url: "http://es:9200"}
+	database.GetESClient(&ecfg)
 
 	router.Use(cors.Middleware(cors.Config{
 		Origins:         "*",
