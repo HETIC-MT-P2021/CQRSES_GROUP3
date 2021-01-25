@@ -8,6 +8,7 @@ import (
 var Cb *cqrs.CommandBus
 var Qb *cqrs.QueryBus
 
+// InitBuses initializes the command and query buses
 func InitBuses() {
 	Cb = cqrs.NewCommandBus()
 	Qb = cqrs.NewQueryBus()
