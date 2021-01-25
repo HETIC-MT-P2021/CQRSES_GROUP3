@@ -4,9 +4,9 @@ import "github.com/HETIC-MT-P2021/CQRSES_GROUP3/core/cqrs"
 
 type GetArticleQuery struct {}
 
-type CreateArticleQueryHandler struct {}
+type ArticleQueryHandler struct {}
 
-func (aqh *CreateArticleQueryHandler) Handle (command cqrs.QueryMessage) (interface{}, error) {
+func (aqh *ArticleQueryHandler) Handle (command cqrs.QueryMessage) (interface{}, error) {
 	switch command.Payload() {
 	case GetArticleQuery{}:
 		return nil, nil
@@ -15,6 +15,6 @@ func (aqh *CreateArticleQueryHandler) Handle (command cqrs.QueryMessage) (interf
 	}
 }
 
-func NewArticleQueryHandler() *CreateArticleQueryHandler {
-	return &CreateArticleQueryHandler{}
+func NewArticleQueryHandler() *ArticleQueryHandler {
+	return &ArticleQueryHandler{}
 }

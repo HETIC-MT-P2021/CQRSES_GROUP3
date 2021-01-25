@@ -6,9 +6,9 @@ type CreateArticleCommand struct {}
 type EditArticleCommand struct {}
 type DeleteArticleCommand struct {}
 
-type CreateArticleCommandHandler struct {}
+type ArticleCommandHandler struct {}
 
-func (ach *CreateArticleCommandHandler) Handle (command cqrs.CommandMessage) (interface{}, error) {
+func (ach *ArticleCommandHandler) Handle (command cqrs.CommandMessage) (interface{}, error) {
 	switch command.Payload() {
 	case CreateArticleCommand{}:
 		return nil, nil
@@ -19,6 +19,6 @@ func (ach *CreateArticleCommandHandler) Handle (command cqrs.CommandMessage) (in
 	}
 }
 
-func NewArticleCommandHandler() *CreateArticleCommandHandler {
-	return &CreateArticleCommandHandler{}
+func NewArticleCommandHandler() *ArticleCommandHandler {
+	return &ArticleCommandHandler{}
 }

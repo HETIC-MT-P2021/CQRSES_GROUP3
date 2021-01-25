@@ -21,7 +21,4 @@ func InitBuses() {
 	//> -------------------- ARTICLE QUERIES ---------------------------
 	_ = Qb.RegisterHandler(articles.NewArticleQueryHandler(), articles.GetArticleQuery{})
 	//< -------------------- ARTICLE QUERIES ---------------------------
-
-
-
 }
