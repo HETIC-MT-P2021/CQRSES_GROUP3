@@ -4,28 +4,11 @@ A repository to train on event sourcing, CQRS and DDD.
 
 ## Project setup
 
-Generate RSA keys for the token authentication :
+If this is the first time you run the project, please go to the `.env.dist` file and set the variables according to your wishes
 
-```sh
-    make init 
-    #or
-    # use the following password: private_key
-    openssl genrsa -des3 -out private.pem 2048
-    openssl rsa -in private.pem -outform PEM -pubout -out public.pem
+then simply run `make init`
 
-```
-
-Update your environment. Create a `.env` file thanks to the `.env.dist` example.
-
-build app :
-
-```sh
-    make run
-
-    # OR
-
-    docker-compose up --build
-```
+If you need more informations about the available make commands just run `make help`
 
 ## Tests
 
@@ -53,3 +36,54 @@ The naming of the PR should follow the same rules as the [COMMIT_CONVENTIONS](CO
 ## Linter
 
 We use go linter [gofmt](https://blog.golang.org/gofmt) to automatically formats the source code.
+
+## Documentation
+
+### Account
+
+Create new account
+
+```http request
+POST /register
+Content-Type: application/json
+{
+    "name": John Doe,
+    "email": "johndoe@gmail.com",
+    "password": "*********",
+    "admin": true
+}
+```
+
+Log in
+
+```http request
+POST /login
+Content-Type: application/json
+{
+    "email": "johndoe@gmail.com",
+    "password": "*********",
+}
+```
+
+### Articles
+
+Create new article
+
+```http request
+POST /api/v1/articles
+Content-Type: application/json
+{
+    "AuthorID": 1,
+    "Title": "The best article you'll read today",
+    "Content": "In fact it's the best article because it's only one line."
+}
+```
+
+## Stack
+
+| tool | port | note |
+| - | - | - |
+| postgres | 5432 | store the users |
+| go | 8000 | the app |
+| adminer | 8080 | administrate the db |
+| elasticsearch | 5432 | store the articles |
