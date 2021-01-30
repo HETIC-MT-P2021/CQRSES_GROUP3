@@ -47,7 +47,7 @@ Create new account
 POST /register
 Content-Type: application/json
 {
-    "name": John Doe,
+    "name": "John Doe",
     "email": "johndoe@gmail.com",
     "password": "*********",
     "admin": true
