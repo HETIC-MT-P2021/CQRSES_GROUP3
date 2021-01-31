@@ -122,7 +122,7 @@ func CreateNewIndex(index string) error {
 	return nil
 }
 
-func CreateNewDocumentInIndex(index string, document *Document) (*Document ,error) {
+func CreateNewDocumentInIndex(index string, document *Document) error {
 	client := database.EsClient
 	inserted, err := client.Index().
 		Index(index).
@@ -131,12 +131,12 @@ func CreateNewDocumentInIndex(index string, document *Document) (*Document ,erro
 
 	if err != nil {
 		log.Error("cannot insert document in index %s", index)
-		return nil, errors.New( "cannot insert document in index: " + index)
+		return errors.New( "cannot insert document in index: " + index)
 	}
 	log.Info(helpers.ParseStringToUint64(inserted.Id))
 	document.ID = inserted.Id
 
-	return document, nil
+	return nil
 }
 
 func GetDocumentById(index string, id string) (*Document, error) {

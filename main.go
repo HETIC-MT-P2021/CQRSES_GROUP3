@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/domain"
 	"net/http"
 	"os"
 	"os/signal"
@@ -44,7 +45,8 @@ func main() {
 		ValidateHeaders: false,
 	}))
 	routes.Init(router)
-
+	domain.InitBuses()
+	
 	go func() {
 		if err := router.Run(":8000"); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
