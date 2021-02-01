@@ -19,7 +19,7 @@ func CreateArticle(c *gin.Context) {
 	command := articles.CreateArticleCommand {
 		ArticleForm: articleForm,
 	}
-	cmdDescriptor := cqrs.NewCommandMessage(command)
+	cmdDescriptor := cqrs.NewCommandMessage(&command)
 	res, err := domain.Cb.Dispatch(cmdDescriptor)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
