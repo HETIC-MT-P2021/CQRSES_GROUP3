@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/domain"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/core/cqrs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/domain/articles"
 	"net/http"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/models"
@@ -18,7 +19,8 @@ func CreateArticle(c *gin.Context) {
 	command := articles.CreateArticleCommand {
 		ArticleForm: articleForm,
 	}
-	res, err := domain.Cb.Dispatch(command)
+	cmdDescriptor := cqrs.NewCommandMessage(command)
+	res, err := domain.Cb.Dispatch(cmdDescriptor)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return

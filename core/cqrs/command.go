@@ -3,7 +3,6 @@ package cqrs
 import (
 	"fmt"
 	"reflect"
-	"github.com/sirupsen/logrus"
 )
 
 type CommandMessage interface {
@@ -22,15 +21,14 @@ func NewCommandBus() *CommandBus {
 }
 
 func (b *CommandBus) Dispatch(command CommandMessage) (interface{}, error) {
-	logrus.Info(b)
 	if handler, ok := b.handlers[command.CommandType()]; ok {
 		return handler.Handle(command)
 	}
 	return nil, fmt.Errorf("the command bus does not have a handler for commands of type: %s", command.CommandType())
 }
 
-func (b *CommandBus) RegisterHandler(handler CommandHandler, command CommandMessage) error {
-	typeName := command.CommandType()
+func (b *CommandBus) RegisterHandler(handler CommandHandler, command interface{}) error {
+	typeName := reflect.TypeOf(command).Elem().Name()
 	if _, ok := b.handlers[typeName]; ok {
 		return fmt.Errorf("duplicate command handler registration with command bus for command of type: %s", typeName)
 	}
