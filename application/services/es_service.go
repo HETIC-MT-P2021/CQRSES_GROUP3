@@ -7,6 +7,7 @@ import (
 	"errors"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/helpers"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/core/es"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	log "github.com/sirupsen/logrus"
 	"strconv"
@@ -30,7 +31,7 @@ type SearchResult struct {
 
 type Document struct {
 	ID   string
-	Body interface{}
+	Body es.Event
 }
 
 func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchResult {
