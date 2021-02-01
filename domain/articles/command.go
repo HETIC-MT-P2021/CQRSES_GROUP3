@@ -10,25 +10,17 @@ type CreateArticleCommand struct {
 	ArticleForm models.ArticleForm
 }
 
-func (c CreateArticleCommand) CommandType() string {
-	return "CreateArticleCommand"
-}
-func (c CreateArticleCommand) Payload() interface{} {
-	return &c
-}
+type EditArticleCommand struct{}
+type DeleteArticleCommand struct{}
 
-type EditArticleCommand struct {}
-type DeleteArticleCommand struct {}
+type ArticleCommandHandler struct{}
 
-type ArticleCommandHandler struct {}
-
-func (ach *ArticleCommandHandler) Handle (command cqrs.CommandMessage) (interface{}, error) {
-	switch command.CommandType() {
-	case "CreateArticleCommand":
-		payload := command.Payload().(*CreateArticleCommand)
-		article, err := validateAndPersistArticle(&payload.ArticleForm)
+func (ach *ArticleCommandHandler) Handle(command cqrs.CommandMessage) (interface{}, error) {
+	switch cmd := command.Payload().(type) {
+	case *CreateArticleCommand:
+		article, err := validateAndPersistArticle(&cmd.ArticleForm)
 		return article, err
-	case "EditArticleCommand":
+	case *EditArticleCommand:
 		return nil, nil
 	default:
 		return nil, nil
