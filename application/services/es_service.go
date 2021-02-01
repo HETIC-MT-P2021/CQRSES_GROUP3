@@ -7,7 +7,7 @@ import (
 	"errors"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/helpers"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP/core/es"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/core/es"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	log "github.com/sirupsen/logrus"
 	"strconv"
