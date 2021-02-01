@@ -7,7 +7,6 @@ import (
 	"errors"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/helpers"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/core/es"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	log "github.com/sirupsen/logrus"
 	"strconv"
@@ -20,7 +19,7 @@ type EsConnector struct {
 type EsService interface {
 	SearchWithKeyword(index string, query map[string]interface{})
 	CreateNewIndex(index string) error
-	CreateNewDocumentInIndex(index string, document *Document) (*Document ,error)
+	CreateNewDocumentInIndex(index string, document *Document) (*Document, error)
 	GetDocumentById(index string, id string) (*Document, error)
 }
 
@@ -31,7 +30,7 @@ type SearchResult struct {
 
 type Document struct {
 	ID   string
-	Body es.Event
+	Body interface{}
 }
 
 func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchResult {
@@ -60,7 +59,7 @@ func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchRes
 	return mapSearchResults(response)
 }
 
-func prettifyNotFoundError(response *esapi.Response)  {
+func prettifyNotFoundError(response *esapi.Response) {
 	if response.IsError() {
 		var error map[string]interface{}
 		if err := json.NewDecoder(response.Body).Decode(&error); err != nil {
@@ -116,7 +115,7 @@ func CreateNewIndex(index string) error {
 		log.Error("cannot create new index: %s", index)
 		return errors.New("cannot create new index: " + index)
 	}
-	if !indexed.Acknowledged{
+	if !indexed.Acknowledged {
 		log.Error("error while acknowledging index: %s", index)
 		return errors.New("error while acknowledging index: " + index)
 	}
@@ -132,7 +131,7 @@ func CreateNewDocumentInIndex(index string, document *Document) error {
 
 	if err != nil {
 		log.Error("cannot insert document in index %s", index)
-		return errors.New( "cannot insert document in index: " + index)
+		return errors.New("cannot insert document in index: " + index)
 	}
 	log.Info(helpers.ParseStringToUint64(inserted.Id))
 	document.ID = inserted.Id
@@ -150,19 +149,19 @@ func GetDocumentById(index string, id string) (*Document, error) {
 
 	if err != nil {
 		log.Error("cannot fetch document with id: %s", id)
-		return nil, errors.New( "cannot fetch document with id: " + id)
+		return nil, errors.New("cannot fetch document with id: " + id)
 	}
 	if !document.Found {
 		log.Error("document not found with id: %s", id)
-		return nil, errors.New( "document not found with id: " + id)
+		return nil, errors.New("document not found with id: " + id)
 	}
 	_, err = client.Flush().Index(index).Do(ctx)
 	if err != nil {
 		log.Error("error while writing document")
-		return nil, errors.New( "error while writing document")
+		return nil, errors.New("error while writing document")
 	}
 	doc := Document{
-		ID: document.Id,
+		ID:   document.Id,
 		Body: document.Source,
 	}
 

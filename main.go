@@ -46,7 +46,7 @@ func main() {
 	}))
 	routes.Init(router)
 	domain.InitBuses()
-	
+
 	go func() {
 		if err := router.Run(":8000"); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)

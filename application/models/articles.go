@@ -5,19 +5,19 @@ import (
 	"time"
 )
 
-// Article is the 
+// Article is the
 type Article struct {
-	AuthorID 	uint64
-	Title 		string
-	Content		string
-	CreatedAt	time.Time
+	AuthorID  uint64
+	Title     string
+	Content   string
+	CreatedAt time.Time
 }
 
 // ArticleForm represents the informations needed to create an article
 type ArticleForm struct {
-	AuthorID 	uint64
-	Title 		string
-	Content 	string
+	AuthorID uint64
+	Title    string
+	Content  string
 }
 
 // ValidateArticle takes an article form as parameter and check if its properties are valid
