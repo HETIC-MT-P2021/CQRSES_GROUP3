@@ -6,7 +6,7 @@ import (
 
 // Event is the structure for all our events
 type Event struct {
-	ID        string
+	AggregateID        string
 	Typology  Typology
 	Payload   interface{}
 	CreatedAt time.Time
