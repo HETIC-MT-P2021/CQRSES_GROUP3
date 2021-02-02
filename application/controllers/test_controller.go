@@ -1,25 +1,33 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/services"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 
 func TestSearchService(c *gin.Context) {
 	// How to build a query
-	_ = map[string]interface{}{
+	id := c.Param("id")
+	query := map[string]interface{}{
 		"query": map[string]interface{}{
-			"match": map[string]interface{}{
-				"name": "jack",
+			"bool": map[string]interface{}{
+				"must": map[string]interface{}{
+					"term": map[string]interface{}{
+						"AggregateID": id,
+					},
+				},
 			},
 		},
 	}
-	doc, err := services.GetDocumentById("articles", "Cuw3EncB4DCj_NoRaliY")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+	log.Info(query)
+	searchResults := services.SearchWithKeyword("article", &query)
+	if searchResults == nil {
+		c.JSON(http.StatusBadRequest, fmt.Errorf("FUCK THIS SHIT"))
 		return
 	}
-	c.JSON(http.StatusOK, doc)
+	c.JSON(http.StatusOK, searchResults)
 	return
 }

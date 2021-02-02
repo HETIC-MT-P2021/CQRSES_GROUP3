@@ -9,9 +9,11 @@ import (
 // Init initializes router with the following routes
 func Init(r *gin.Engine) {
 	r.POST("/register", controllers.CreateCustomer)
-	r.POST("/login", controllers.Login)
+	r.GET("/login", controllers.Login)
 
 	api := r.Group("/api")
+	api.GET("/search/:id", controllers.TestSearchService)
+	api.POST("/articles", controllers.CreateArticle)
 	api.Use(middlewares.CheckAuthorization)
 	{
 		api.GET("/", controllers.TestController)
@@ -21,6 +23,4 @@ func Init(r *gin.Engine) {
 		v1.GET("/search", controllers.TestSearchService)
 		v1.POST("/articles", controllers.CreateArticle)
 	}
-	//test
-	r.GET("/search", controllers.TestSearchService)
 }
