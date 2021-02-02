@@ -105,67 +105,14 @@ func mapSearchResults(response *esapi.Response) *[]SearchResult {
 
 // CreateNewIndex allows you to create a new elastic search index.
 // Checks if index already exists
-func CreateNewIndex(index string) error {
+func CreateNewIndex(index string, mapping string) error {
 	client := database.EsClient
 	ctx := context.Background()
 	exists, err := client.IndexExists(index).Do(ctx)
-	if !exists {
-		log.Error("Index exist already: %s", index)
-		return errors.New("index exist already")
+	if exists {
+		log.Info("Index exist already: %s", index)
+		return nil
 	}
-	mapping :=
-	`{
-        "mappings": {
-            "properties": {
-                "AggregateID": {
-                    "type": "keyword"
-                },
-                "CreatedAt": {
-                    "type": "date"
-                },
-                "Index": {
-                    "type": "long"
-                },
-                "Payload": {
-                    "properties": {
-                        "AuthorID": {
-                            "type": "long"
-                        },
-                        "Content": {
-                            "type": "text",
-                            "fields": {
-                                "keyword": {
-                                    "type": "keyword",
-                                    "ignore_above": 256
-                                }
-                            }
-                        },
-                        "CreatedAt": {
-                            "type": "date"
-                        },
-                        "Title": {
-                            "type": "text",
-                            "fields": {
-                                "keyword": {
-                                    "type": "keyword",
-                                    "ignore_above": 256
-                                }
-                            }
-                        }
-                    }
-                },
-                "Typology": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
-                }
-            }
-        }
-	}`
 	indexed, err := client.CreateIndex(index).BodyString(mapping).Do(ctx)
 	if err != nil {
 		log.Error("cannot create new index: %s", index)
@@ -183,7 +130,7 @@ func CreateNewDocumentInIndex(index string, document *Document) error {
 	ctx := context.Background()
 	exists, err := client.IndexExists(index).Do(ctx)
 	if !exists {
-		if err := CreateNewIndex(index); err != nil{
+		if err := CreateNewIndex(index, `{}`); err != nil{
 			return fmt.Errorf("could not create index: %s", index)
 		}
 	}
