@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/helpers"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
@@ -108,11 +109,64 @@ func CreateNewIndex(index string) error {
 	client := database.EsClient
 	ctx := context.Background()
 	exists, err := client.IndexExists(index).Do(ctx)
-	if exists {
+	if !exists {
 		log.Error("Index exist already: %s", index)
 		return errors.New("index exist already")
 	}
-	indexed, err := client.CreateIndex(index).Do(ctx)
+	mapping :=
+	`{
+        "mappings": {
+            "properties": {
+                "AggregateID": {
+                    "type": "keyword"
+                },
+                "CreatedAt": {
+                    "type": "date"
+                },
+                "Index": {
+                    "type": "long"
+                },
+                "Payload": {
+                    "properties": {
+                        "AuthorID": {
+                            "type": "long"
+                        },
+                        "Content": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "CreatedAt": {
+                            "type": "date"
+                        },
+                        "Title": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        }
+                    }
+                },
+                "Typology": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                }
+            }
+        }
+	}`
+	indexed, err := client.CreateIndex(index).BodyString(mapping).Do(ctx)
 	if err != nil {
 		log.Error("cannot create new index: %s", index)
 		return errors.New("cannot create new index: " + index)
@@ -126,6 +180,13 @@ func CreateNewIndex(index string) error {
 
 func CreateNewDocumentInIndex(index string, document *Document) error {
 	client := database.EsClient
+	ctx := context.Background()
+	exists, err := client.IndexExists(index).Do(ctx)
+	if !exists {
+		if err := CreateNewIndex(index); err != nil{
+			return fmt.Errorf("could not create index: %s", index)
+		}
+	}
 	inserted, err := client.Index().
 		Index(index).
 		BodyJson(document.Body).
