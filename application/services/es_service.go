@@ -42,6 +42,7 @@ func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchRes
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
 		log.Error("Error encoding query: %s", err)
+		return nil
 	}
 	response, err := client.Search(
 		client.Search.WithContext(context.Background()),
@@ -53,6 +54,7 @@ func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchRes
 	)
 	if err != nil {
 		log.Fatalf("Error getting response: %s", err)
+		return nil
 	}
 	prettifyNotFoundError(response)
 
