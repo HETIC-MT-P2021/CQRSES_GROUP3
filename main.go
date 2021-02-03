@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/services"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/domain"
 	"net/http"
 	"os"
@@ -34,6 +35,9 @@ func main() {
 	router := gin.Default()
 	ecfg := database.EsCfg{Url: "http://es:9200"}
 	database.GetESClient(&ecfg)
+	if err := services.MigrateIndex(); err != nil {
+		helpers.DieOnError("migration failed", err)
+	}
 
 	router.Use(cors.Middleware(cors.Config{
 		Origins:         "*",

@@ -4,6 +4,7 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/models"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/services"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/core/es"
+	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 	"time"
 )
@@ -11,11 +12,12 @@ import (
 // PersistArticle saves an article in es
 func PersistArticle(article *models.Article) error {
 	document := services.Document{
-		Body: es.Event{
-			Typology:  es.Create,
-			Payload:   article,
-			CreatedAt: time.Now(),
-			Index:     1, // First event for this article so the index should be 1
+		Body: &es.Event{
+			AggregateID: uuid.NewV4().String(),
+			Typology:    es.Create,
+			Payload:     article,
+			CreatedAt:   time.Now(),
+			Index:       1, // First event for this article so the index should be 1
 		},
 	}
 

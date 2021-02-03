@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/helpers"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
@@ -42,6 +43,7 @@ func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchRes
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
 		log.Error("Error encoding query: %s", err)
+		return nil
 	}
 	response, err := client.Search(
 		client.Search.WithContext(context.Background()),
@@ -53,6 +55,7 @@ func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchRes
 	)
 	if err != nil {
 		log.Fatalf("Error getting response: %s", err)
+		return nil
 	}
 	prettifyNotFoundError(response)
 
@@ -102,15 +105,15 @@ func mapSearchResults(response *esapi.Response) *[]SearchResult {
 
 // CreateNewIndex allows you to create a new elastic search index.
 // Checks if index already exists
-func CreateNewIndex(index string) error {
+func CreateNewIndex(index string, mapping string) error {
 	client := database.EsClient
 	ctx := context.Background()
 	exists, err := client.IndexExists(index).Do(ctx)
 	if exists {
-		log.Error("Index exist already: %s", index)
-		return errors.New("index exist already")
+		log.Info("Index exist already: %s", index)
+		return nil
 	}
-	indexed, err := client.CreateIndex(index).Do(ctx)
+	indexed, err := client.CreateIndex(index).BodyString(mapping).Do(ctx)
 	if err != nil {
 		log.Error("cannot create new index: %s", index)
 		return errors.New("cannot create new index: " + index)
@@ -124,6 +127,13 @@ func CreateNewIndex(index string) error {
 
 func CreateNewDocumentInIndex(index string, document *Document) error {
 	client := database.EsClient
+	ctx := context.Background()
+	exists, err := client.IndexExists(index).Do(ctx)
+	if !exists {
+		if err := CreateNewIndex(index, `{}`); err != nil{
+			return fmt.Errorf("could not create index: %s", index)
+		}
+	}
 	inserted, err := client.Index().
 		Index(index).
 		BodyJson(document.Body).
