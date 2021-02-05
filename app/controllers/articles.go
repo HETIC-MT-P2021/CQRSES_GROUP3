@@ -29,3 +29,39 @@ func CreateArticle(c *gin.Context) {
 
 	c.JSON(http.StatusOK, res)
 }
+
+// UpdateArticle
+func UpdateArticle(c *gin.Context) {
+	id := c.Param("id")
+	var articleForm models.ArticleForm
+	if err := c.ShouldBindJSON(&articleForm); err != nil {
+		c.JSON(http.StatusBadRequest, "Missing fields for the article : "+err.Error())
+		return
+	}
+	command := articles.EditArticleCommand{
+		AggregateId: id,
+		ArticleForm: articleForm,
+	}
+	cmdDescriptor := cqrs.NewCommandMessage(&command)
+	article, err := domain.Cb.Dispatch(cmdDescriptor)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, article)
+	return
+}
+
+func GetReadModel(c *gin.Context) {
+	id := c.Param("id")
+	command := articles.GetArticleByAggregateIDQuery{AggregateID: id}
+	cmdDescriptor := cqrs.NewQueryMessage(&command)
+	_, err := domain.Qb.Dispatch(cmdDescriptor)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, "ok")
+	return
+}

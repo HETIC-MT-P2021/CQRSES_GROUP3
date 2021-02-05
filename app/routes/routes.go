@@ -13,14 +13,19 @@ func Init(r *gin.Engine) {
 
 	api := r.Group("/api")
 	api.GET("/search/:id", controllers.TestSearchService)
-	api.POST("/articles", controllers.CreateArticle)
+	api.GET("/articles/:id", controllers.GetReadModel)
 	api.Use(middlewares.CheckAuthorization)
 	{
 		api.GET("/", controllers.TestController)
 
 		// V1
 		v1 := api.Group("/v1")
+		// Search
 		v1.GET("/search", controllers.TestSearchService)
+
+		// Articles
 		v1.POST("/articles", controllers.CreateArticle)
+		v1.POST("/articles/:id", controllers.UpdateArticle)
+
 	}
 }
