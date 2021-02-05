@@ -13,6 +13,7 @@ WORKDIR /go/src/github.com/HETIC-MT-P2021/CQRSES_GROUP3
 # Copy the source from the current directory to the working Directory inside the container
 COPY . .
 
+WORKDIR app
 # Download all dependencies. Dependencies will be cached if the go.mod and the go.sum files are not changed
 RUN go mod download -x
 RUN go get -u github.com/cosmtrek/air

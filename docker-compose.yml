@@ -6,12 +6,12 @@ services:
       context: .
       dockerfile: .docker/go/Dockerfile
     ports: 
-      - 8000:8000 
+      - 8000:8000
     restart: on-failure
     volumes:
       - ./:/go/src/github.com/HETIC-MT-P2021/CQRSES_GROUP3
     depends_on:
-      - postgres          
+      - postgres
     networks:
       - backend
     environment:
@@ -24,7 +24,7 @@ services:
   postgres:
     image: postgres:latest
     environment:
-      - POSTGRES_USER=root  
+      - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=db
       - DATABASE_HOST=postgres
@@ -74,11 +74,13 @@ services:
       - backend
 
   app-consumer:
-    build: rabbitmq/.
+    build:
+      context: .
+      dockerfile: .docker/consumer/Dockerfile
     ports:
-      - '8082:8082'
+      - 8082:8082
     volumes:
-      - '.:/go/src/github.com/HETIC-MT-P2021/CQRSES_GROUP3/CQRSES_GROUP3/'
+      - ./:/go/src/github.com/HETIC-MT-P2021/CQRSES_GROUP3/
     tty: true
     environment:
       - DB_USER=root
@@ -92,10 +94,10 @@ services:
   rabbitmq:
     image: 'bitnami/rabbitmq:latest'
     ports:
-      - '15672:15672'
-      - "5672:5672"
+      - 15672:15672
+      - 5672:5672
     volumes:
-      - 'rmq_data:/bitnami'
+      - rmq_data:/bitnami
     environment:
       RABBITMQ_USERNAME: user
       RABBITMQ_PASSWORD: bitnami
