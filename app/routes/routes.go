@@ -9,7 +9,7 @@ import (
 // Init initializes router with the following routes
 func Init(r *gin.Engine) {
 	r.POST("/register", controllers.CreateCustomer)
-	r.GET("/login", controllers.Login)
+	r.POST("/login", controllers.Login)
 
 	api := r.Group("/api")
 	api.GET("/search/:id", controllers.TestSearchService)
