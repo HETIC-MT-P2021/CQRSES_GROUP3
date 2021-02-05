@@ -15,4 +15,5 @@ require (
 	github.com/olivere/elastic/v7 v7.0.22
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.7.0
+	github.com/streadway/amqp v1.0.0
 )

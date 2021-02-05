@@ -73,11 +73,42 @@ services:
     networks:
       - backend
 
+  app-consumer:
+    build: rabbitmq/.
+    ports:
+      - '8082:8082'
+    volumes:
+      - '.:/go/src/github.com/HETIC-MT-P2021/CQRSES_GROUP3/CQRSES_GROUP3/'
+    tty: true
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=db
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    networks:
+      - backend
+
+  rabbitmq:
+    image: 'bitnami/rabbitmq:latest'
+    ports:
+      - '15672:15672'
+      - "5672:5672"
+    volumes:
+      - 'rmq_data:/bitnami'
+    environment:
+      RABBITMQ_USERNAME: user
+      RABBITMQ_PASSWORD: bitnami
+    networks:
+      - backend
+
 volumes:
   api:
   postgres:
   elasticsearch-data:
-    driver: local                 
+    driver: local
+  rmq_data:
+    driver: local
 
 # Networks to be created to facilitate communication between containers
 networks:

@@ -1,8 +1,10 @@
 package articles
 
 import (
+	"fmt"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/models"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/core/cqrs"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/rabbitmq/producer"
 )
 
 // CreateArticleCommand is the struct we use to create a new command
@@ -18,8 +20,16 @@ type ArticleCommandHandler struct{}
 func (ach *ArticleCommandHandler) Handle(command cqrs.CommandMessage) (interface{}, error) {
 	switch cmd := command.Payload().(type) {
 	case *CreateArticleCommand:
-		article, err := validateAndPersistArticle(&cmd.ArticleForm)
-		return article, err
+		queue := producer.QueueService{
+			Queue: command.CommandType(),
+			Data: cmd.ArticleForm,
+		}
+		err := queue.SendToRabbit()
+		fmt.Println(err)
+		if err != nil {
+			return nil, err
+		}
+		return nil, err
 	case *EditArticleCommand:
 		return nil, nil
 	default:
