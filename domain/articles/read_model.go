@@ -1,13 +1,11 @@
 package articles
 
 import (
-	"sort"
-	"fmt"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/helpers"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/repositories"
+	"sort"
 	"time"
-	log "github.com/sirupsen/logrus"
 )
 
 type ReadModel struct {
@@ -20,11 +18,11 @@ type ArticleReadModel struct {
 	ReadModel ReadModel
 }
 
-func (r *ReadModel) ProjectNewReadModel() {
+func (r *ReadModel) ProjectNewReadModel() (models.Article, error) {
 	var articleStruct models.Article
 	eventList, err := repositories.GetArticleEventByAggregateId(r.AggregateID)
 	if err != nil {
-		fmt.Printf("Error while fetching article with Aggregate id: %s\n", r.AggregateID)
+		return models.Article{}, err
 	}
 
 	sort.SliceStable(eventList, func (i, j int) bool {
@@ -42,12 +40,12 @@ func (r *ReadModel) ProjectNewReadModel() {
 		article := event.Payload.(map[string]interface{})
 		err := helpers.Decode(article, &articleStruct)
 		if err != nil {
-			fmt.Println("ERROR", err)
+			return models.Article{}, err
 		}
 		applyChanges(&readModel, &articleStruct)
 	}
 
-	log.Info("readmodel ",readModel)
+	return readModel, nil
 }
 
 func applyChanges(old *models.Article, new *models.Article) {

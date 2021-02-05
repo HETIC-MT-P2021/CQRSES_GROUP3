@@ -57,11 +57,11 @@ func GetReadModel(c *gin.Context) {
 	id := c.Param("id")
 	command := articles.GetArticleByAggregateIDQuery{AggregateID: id}
 	cmdDescriptor := cqrs.NewQueryMessage(&command)
-	_, err := domain.Qb.Dispatch(cmdDescriptor)
+	article, err := domain.Qb.Dispatch(cmdDescriptor)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusOK, "ok")
+	c.JSON(http.StatusOK, article)
 	return
 }

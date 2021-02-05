@@ -14,9 +14,15 @@ type ArticleQueryHandler struct{}
 func (aqh *ArticleQueryHandler) Handle(command cqrs.QueryMessage) (interface{}, error) {
 	switch cmd := command.Payload().(type) {
 	case *GetArticleByAggregateIDQuery:
+<<<<<<< HEAD:app/domain/articles/query.go
 		r := articles.ReadModel{AggregateID: cmd.AggregateID}
 		r.ProjectNewReadModel()
 		return nil, nil
+=======
+		r := ReadModel{AggregateID: cmd.AggregateID}
+		readModel, err := r.ProjectNewReadModel()
+		return readModel, err
+>>>>>>> feat: finished read model construction:domain/articles/query.go
 	default:
 		return nil, nil
 	}
