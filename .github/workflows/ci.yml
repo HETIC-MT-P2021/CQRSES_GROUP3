@@ -29,9 +29,12 @@ jobs:
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
         fi
-    - name: Build
-      run: go build -v .
-    
+    - name: Build Main app
+      run: go build -v ./app/main ./app/main.go
+
+    - name: Build Consummer app
+      run: go build -v ./consummer/main ./consummer/main.go
+
     - name: Lint
       run: gofmt -e .
 
