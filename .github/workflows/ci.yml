@@ -30,10 +30,10 @@ jobs:
             dep ensure
         fi
     - name: Build Main app
-      run: go build -v ./app/main ./app/main.go
+      run: go build -v ./app/main.go
 
     - name: Build Consummer app
-      run: go build -v ./consummer/main ./consummer/main.go
+      run: go build -v ./consummer/main.go
 
     - name: Lint
       run: gofmt -e .
