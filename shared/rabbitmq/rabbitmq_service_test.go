@@ -7,11 +7,15 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+// RabbitmqTestSuite allow you to create rabbitQueue instance and access services.
+// Implements testify suite.
 type RabbitmqTestSuite struct {
 	suite.Suite
 	queue *Rabbitmq
 }
 
+// SetupTest Injects create queue instance with necessary config.
+// Assign the RabbitmqTestSuite's queue property.
 func (s *RabbitmqTestSuite) SetupTest() {
 	q, err := NewQueueInstance(Config{
 		URL:        "amqp://user:bitnami@localhost:5672",
@@ -26,10 +30,13 @@ func (s *RabbitmqTestSuite) SetupTest() {
 	s.queue = q
 }
 
+// Method from testify
+// Essentially close the connection with Rabbit.
 func (s *RabbitmqTestSuite) TearDownTest() {
 	s.queue.Close()
 }
 
+// TestPublishMessage
 func (s *RabbitmqTestSuite) TestPublishMessage() {
 	s.T().Run("publish a message", func(t *testing.T) {
 		message := []byte("Test")
@@ -38,6 +45,7 @@ func (s *RabbitmqTestSuite) TestPublishMessage() {
 	})
 }
 
+// TestConsumeMessage
 func (s *RabbitmqTestSuite) TestConsumeMessage() {
 	message := []byte("Test")
 	err := s.queue.Publish(message)
@@ -64,6 +72,10 @@ func (s *RabbitmqTestSuite) TestConsumeMessage() {
 	})
 }
 
+// TestRabbitmqTestSuite runs all the tests. Did not put this test in tests folder because CI would failed
+// Launch this test locally with: go test ./shared/rabbitmq
+// Be sure rabbitmq instance is up and running.
+// @todo: add RabbitMq service in github actions.
 func TestRabbitmqTestSuite(t *testing.T) {
 	suite.Run(t, new(RabbitmqTestSuite))
 }
