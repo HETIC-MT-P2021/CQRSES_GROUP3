@@ -3,7 +3,7 @@ package models
 import (
 	"testing"
 
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/application/models"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
 )
 
 func TestValidateCustomer(t *testing.T) {
