@@ -1,25 +1,14 @@
 #!/bin/sh
-
-max_iterations=10
-wait_seconds=6
-http_endpoint="http://rabbitmq:5672/"
-
-iterations=0
-while true
-do
-	((iterations++))
-	echo "Attempt $iterations"
-	sleep $wait_seconds
-
-	http_code=$(curl --verbose -s -o /tmp/result.txt -w '%{http_code}' "$http_endpoint";)
-
-	if [ "$http_code" -eq 200 ]; then
-		echo "Server Up"
-		break
-	fi
-
-	if [ "$iterations" -ge "$max_iterations" ]; then
-		echo "Loop Timeout"
-		exit 1
+wait_seconds=30
+END=5
+echo "Testing rabbitMQ status"
+for i in $(seq 1 $END); do
+  echo "Tentative: "$i;
+  sleep $wait_seconds
+  ping=`ping -c 1 rabbitmq | grep bytes | wc -l`
+	if [ "$ping" -gt 1 ]; then
+		echo "Consummer Server Up"
+		exec ./consummer/main
 	fi
 done
+echo "RabbitMQ server is down"

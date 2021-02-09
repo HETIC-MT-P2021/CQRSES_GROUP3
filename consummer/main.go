@@ -1,8 +1,10 @@
 package main
 
-import "github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/rabbitmq/consummer"
+import (
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/rabbitmq/consummer"
+)
 
-func main()  {
+func main() {
 	cqs := consummer.ConsumeQueueService{Queue: "CreateArticleCommand"}
-	cqs.ReceiveFromRabbit()
+	cqs.Consume()
 }

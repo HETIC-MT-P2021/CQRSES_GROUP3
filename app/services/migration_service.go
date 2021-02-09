@@ -65,7 +65,7 @@ func migrateArticleIndex() error {
             }
         }
 	}`
-	if err := CreateNewIndex("article", eventMapping); err != nil{
+	if err := CreateNewIndex("article", eventMapping); err != nil {
 		return fmt.Errorf("could not migrate article index: %s", err.Error())
 	}
 	return nil

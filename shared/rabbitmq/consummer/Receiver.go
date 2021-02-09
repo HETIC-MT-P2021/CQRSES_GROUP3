@@ -10,7 +10,7 @@ type ConsumeQueueService struct {
 	Queue string
 }
 
-func (qs *ConsumeQueueService) ReceiveFromRabbit() {
+func (cqs *ConsumeQueueService) ReceiveFromRabbit() {
 	var messages []byte
 	var messageList []byte
 
@@ -33,23 +33,26 @@ func (qs *ConsumeQueueService) ReceiveFromRabbit() {
 		fmt.Println("could not open RabbitMQ channel:" + err.Error())
 	}
 
-	msgs, err := channel.Consume(qs.Queue, "", false, false, false, false, nil)
+	msgs, err := channel.Consume(cqs.Queue, "", false, false, false, false, nil)
 
 	if err != nil {
 		fmt.Println("error consuming the queue: " + err.Error())
 	}
+	stopChan := make(chan bool)
+	go func() {
+		// The msgs will be a go channel, not an amqp channel
+		for msg := range msgs {
+			messageList = append(messages, msg.Body...)
+			message := string(msg.Body)
+			fmt.Println("message received: " + message)
+			msg.Ack(false)
+		}
 
-	// The msgs will be a go channel, not an amqp channel
-	for msg := range msgs {
-		messageList = append(messages, msg.Body...)
-		message := string(msg.Body)
-		fmt.Println("message received: " + message)
-		msg.Ack(false)
-	}
+		for message := range messageList {
+			fmt.Println(message)
+		}
 
-	for message := range messageList {
-		fmt.Println(message)
-	}
-
-	defer connection.Close()
+		defer connection.Close()
+	}()
+	<-stopChan
 }

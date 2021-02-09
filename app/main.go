@@ -56,7 +56,6 @@ func main() {
 			log.Fatalf("listen: %s\n", err)
 		}
 	}()
-
 	// ----------------- CLOSE APP -----------------
 
 	quit := make(chan os.Signal)

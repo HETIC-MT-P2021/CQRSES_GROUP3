@@ -22,11 +22,10 @@ func (ach *ArticleCommandHandler) Handle(command cqrs.CommandMessage) (interface
 	case *CreateArticleCommand:
 		queue := producer.QueueService{
 			Queue: command.CommandType(),
-			Data: cmd.ArticleForm,
+			Data:  cmd.ArticleForm,
 		}
-		err := queue.SendToRabbit()
+		err := queue.NewSendToRabbit()
 		fmt.Println(err)
-
 		if err != nil {
 			return nil, err
 		}

@@ -130,7 +130,7 @@ func CreateNewDocumentInIndex(index string, document *Document) error {
 	ctx := context.Background()
 	exists, err := client.IndexExists(index).Do(ctx)
 	if !exists {
-		if err := CreateNewIndex(index, `{}`); err != nil{
+		if err := CreateNewIndex(index, `{}`); err != nil {
 			return fmt.Errorf("could not create index: %s", index)
 		}
 	}

@@ -16,6 +16,7 @@ func CreateArticle(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "Missing fields for the article : "+err.Error())
 		return
 	}
+
 	command := articles.CreateArticleCommand{
 		ArticleForm: articleForm,
 	}

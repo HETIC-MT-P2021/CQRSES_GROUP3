@@ -12,6 +12,8 @@ services:
       - ./:/go/src/github.com/HETIC-MT-P2021/CQRSES_GROUP3
     depends_on:
       - postgres
+      - rabbitmq
+      - es
     networks:
       - backend
     environment:
@@ -73,12 +75,34 @@ services:
     networks:
       - backend
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: bitnami
+    networks:
+      - backend
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   app-consumer:
     build:
       context: .
       dockerfile: .docker/consumer/Dockerfile
     ports:
       - 8082:8082
+    depends_on:
+      - rabbitmq
+      - es
+    links:
+      - rabbitmq
+      - es
     volumes:
       - ./:/go/src/github.com/HETIC-MT-P2021/CQRSES_GROUP3/
     tty: true
@@ -90,20 +114,6 @@ services:
       - DB_PORT=5432
     networks:
       - backend
-
-  rabbitmq:
-    image: 'bitnami/rabbitmq:latest'
-    ports:
-      - 15672:15672
-      - 5672:5672
-    volumes:
-      - rmq_data:/bitnami
-    environment:
-      RABBITMQ_USERNAME: user
-      RABBITMQ_PASSWORD: bitnami
-    networks:
-      - backend
-
 volumes:
   api:
   postgres:
