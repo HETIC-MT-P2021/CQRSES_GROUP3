@@ -72,9 +72,10 @@ func (s *RabbitmqTestSuite) TestConsumeMessage() {
 	})
 }
 
-// TestRabbitmqTestSuite runs all the tests.
+// TestRabbitmqTestSuite runs all the tests. Did not put this test in tests folder because CI would failed
 // Launch this test locally with: go test ./shared/rabbitmq
 // Be sure rabbitmq instance is up and running.
+// @todo: add RabbitMq service in github actions.
 func TestRabbitmqTestSuite(t *testing.T) {
 	suite.Run(t, new(RabbitmqTestSuite))
 }
