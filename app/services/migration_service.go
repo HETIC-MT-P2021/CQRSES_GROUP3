@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// Migrate all the necessary indexes
 func MigrateIndex() error {
 	if err := migrateArticleIndex(); err != nil {
 		return err
@@ -11,6 +12,7 @@ func MigrateIndex() error {
 	return nil
 }
 
+// Map the article index in order to type all the fields.
 func migrateArticleIndex() error {
 	eventMapping :=
 		`{

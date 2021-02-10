@@ -4,6 +4,8 @@ import (
 	"strconv"
 )
 
+// ParseStringToUint64 pretty self explanatory.
+// Especially used for query param conversion.
 func ParseStringToUint64(str string) uint64 {
 	var err error
 	var id uint64
