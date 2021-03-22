@@ -36,7 +36,7 @@ type Document struct {
 }
 
 // SearchWithKeyword perform a search call through elastic search api.
-func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchResult {
+func SearchWithKeyword(index string, query *map[string]interface{}) []*SearchResult {
 	client, err := database.GetOriginalESClient()
 	if err != nil {
 		log.Error("cannot get elastic original client.")
@@ -83,7 +83,7 @@ func prettifyNotFoundError(response *esapi.Response) {
 
 // mapSearchResults private method to map the response of a search call to SearchResult struct.
 // returns a slice of SearchResult.
-func mapSearchResults(response *esapi.Response) *[]SearchResult {
+func mapSearchResults(response *esapi.Response) []*SearchResult {
 	var body map[string]interface{}
 	if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
 		log.Fatal("Error parsing the response body: %s", err)
@@ -95,17 +95,17 @@ func mapSearchResults(response *esapi.Response) *[]SearchResult {
 		int(body["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64)),
 		int(body["took"].(float64)),
 	)
-	var searchResultList []SearchResult
+	var searchResultList []*SearchResult
 	// Print the ID and document source for each hit.
 	for _, hit := range body["hits"].(map[string]interface{})["hits"].([]interface{}) {
-		searchResult := SearchResult{
+		searchResult := &SearchResult{
 			ID:   hit.(map[string]interface{})["_id"],
 			Body: hit.(map[string]interface{})["_source"],
 		}
 		searchResultList = append(searchResultList, searchResult)
 	}
 
-	return &searchResultList
+	return searchResultList
 }
 
 // CreateNewIndex allows you to create a new elastic search index.
