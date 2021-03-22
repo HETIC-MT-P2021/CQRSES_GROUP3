@@ -12,6 +12,6 @@ COPY .docker/consumer/entrypoint.sh .
 RUN go mod download
 RUN go build -o ./consummer/main ./consummer/main.go
 
-RUN chmod +x ./consummer/main
+RUN go get -u github.com/cosmtrek/air
 
 ENTRYPOINT ["./entrypoint.sh"]
