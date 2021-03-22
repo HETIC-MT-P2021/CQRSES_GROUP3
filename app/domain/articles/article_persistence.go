@@ -1,12 +1,16 @@
 package articles
 
 import (
+	"github.com/satori/go.uuid"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/rabbitmq/producer"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/repositories"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/core/es"
+	log "github.com/sirupsen/logrus"
 	"time"
 )
 
-func validateAndPersistArticle(articleForm *models.ArticleForm) (models.Article, error) {
+func validateAndPublishArticleEvent(articleForm *models.ArticleForm) (models.Article, error) {
 	if err := models.ValidateArticle(articleForm); err != nil {
 		return models.Article{}, err
 	}
@@ -18,7 +22,23 @@ func validateAndPersistArticle(articleForm *models.ArticleForm) (models.Article,
 		CreatedAt: time.Now(),
 	}
 
-	if err := repositories.PersistArticle(&article); err != nil {
+	event := es.Event{
+		AggregateID: uuid.NewV4().String(),
+		Typology:    es.Create,
+		Payload:     article,
+		CreatedAt:   time.Now(),
+		Index:       1, // First event for this article so the index should be 1
+	}
+	
+	queue := producer.QueueService{
+		Queue: string(event.Typology),
+		Data:  event,
+	}
+	 
+	err := queue.NewSendToRabbit()
+	log.Error(err)
+
+	if err != nil {
 		return models.Article{}, err
 	}
 
