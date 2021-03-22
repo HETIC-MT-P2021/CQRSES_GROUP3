@@ -18,13 +18,14 @@ type Rabbitmq struct {
 	config  Config
 }
 
-// Service interface the package methods
+// Service interfaces the package methods
 type Service interface {
 	Publish(message []byte) error
 	Consume() (<-chan []byte, error)
 	Close() error
 }
 
+// NewQueueInstance set up all the necessary instances to pass messages to the broker.
 func NewQueueInstance(config Config) (*Rabbitmq, error) {
 	conn, err := amqp.Dial(config.URL)
 	if err != nil {
@@ -49,6 +50,7 @@ func NewQueueInstance(config Config) (*Rabbitmq, error) {
 	}, nil
 }
 
+// NewExchange declare a new rabbit Exchange.
 func NewExchange(c *amqp.Channel, name string) error {
 	return c.ExchangeDeclare(
 		name,    // name
@@ -61,6 +63,7 @@ func NewExchange(c *amqp.Channel, name string) error {
 	)
 }
 
+// NewExchange declare a new rabbit Queue and bing it to the Exchange channel.
 func NewQueue(ch *amqp.Channel, exchange string, name string, bindingKey string) error {
 	q, err := ch.QueueDeclare(
 		name,

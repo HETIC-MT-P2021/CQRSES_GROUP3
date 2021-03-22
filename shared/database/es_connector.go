@@ -13,7 +13,7 @@ type EsCfg struct {
 
 var EsClient *elastic.Client
 
-// GetESClient Attempts to connect to elastic search from "github.com/olivere/elastic/v7"
+// GetESClient Attempts to connect to elastic search using "github.com/olivere/elastic/v7" package.
 // Affect the EsClient to elastic client.
 func GetESClient(escfg *EsCfg) {
 	client, err := elastic.NewClient(
@@ -30,7 +30,7 @@ func GetESClient(escfg *EsCfg) {
 	EsClient = client
 }
 
-// GetOriginalESClient Attempts to connect to elastisearch service from "github.com/elastic/go-elasticsearch/v8"
+// GetOriginalESClient Attempts to connect to elastisearch service using "github.com/elastic/go-elasticsearch/v8" package.
 // Return the client and error
 func GetOriginalESClient() (*es.Client, error) {
 	cfg := es.Config{

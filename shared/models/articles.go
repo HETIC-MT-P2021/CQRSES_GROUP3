@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Article is the
+// Article model.
 type Article struct {
 	AuthorID  uint64
 	Title     string

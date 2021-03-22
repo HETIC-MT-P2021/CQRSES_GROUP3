@@ -17,6 +17,7 @@ import (
 type EsConnector struct {
 }
 
+// EsService interfaces all the methods related to elastic search.
 type EsService interface {
 	SearchWithKeyword(index string, query map[string]interface{})
 	CreateNewIndex(index string) error
@@ -24,16 +25,19 @@ type EsService interface {
 	GetDocumentById(index string, id string) (*Document, error)
 }
 
+// SearchResult is used essentially for mapping the search results gathered by SearchWithKeyword
 type SearchResult struct {
 	ID   interface{}
 	Body interface{}
 }
 
+// Document model for inserting, updating an elastic search document.
 type Document struct {
 	ID   string
 	Body interface{}
 }
 
+// SearchWithKeyword perform a search call through elastic search api.
 func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchResult {
 	client, err := database.GetOriginalESClient()
 	if err != nil {
@@ -62,6 +66,7 @@ func SearchWithKeyword(index string, query *map[string]interface{}) *[]SearchRes
 	return mapSearchResults(response)
 }
 
+// prettifyNotFoundError private method to parse the response of a search call in case no document are found.
 func prettifyNotFoundError(response *esapi.Response) {
 	if response.IsError() {
 		var error map[string]interface{}
@@ -78,6 +83,8 @@ func prettifyNotFoundError(response *esapi.Response) {
 	}
 }
 
+// mapSearchResults private method to map the response of a search call to SearchResult struct.
+// returns a slice of SearchResult.
 func mapSearchResults(response *esapi.Response) *[]SearchResult {
 	var body map[string]interface{}
 	if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
@@ -125,6 +132,9 @@ func CreateNewIndex(index string, mapping string) error {
 	return nil
 }
 
+// CreateNewDocumentInIndex inserts a new document in elastic search.
+// take the index and a pointer of Document as parameters.
+// returns an error
 func CreateNewDocumentInIndex(index string, document *Document) error {
 	client := database.EsClient
 	ctx := context.Background()

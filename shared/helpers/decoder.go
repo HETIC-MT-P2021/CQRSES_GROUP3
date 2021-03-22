@@ -7,6 +7,7 @@ import (
 )
 
 // Decode create a new hook in the mapstructure pkg for the decoder config.
+// Especially used to map a string to a time.Time type.
 func Decode(input interface{}, output interface{}) error {
 	stringToDateTimeHook := func(
 		f reflect.Type,
