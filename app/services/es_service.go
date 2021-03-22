@@ -10,8 +10,6 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/helpers"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	log "github.com/sirupsen/logrus"
-	"strconv"
-	"strings"
 )
 
 type EsConnector struct {
@@ -188,22 +186,18 @@ func GetDocumentById(index string, id string) (*Document, error) {
 	return &doc, nil
 }
 
-func constructQuery(keyword string, size int) *strings.Reader {
-	var query = `{"query": {`
-	query = query + keyword
-	query = query + `}, "size": ` + strconv.Itoa(size) + `}`
-	log.Info("\nquery:", query)
-	isValid := json.Valid([]byte(query)) // returns bool
-	if isValid == false {
-		log.Info("query string not valid:", query)
-		log.Info("Using default match_all query")
-		query = "{}"
-	} else {
-		log.Info("valid JSON:", isValid)
+// ConstructBoolQuery returns a query for the SearchWithKeyWord method
+func ConstructBoolQuery(key string, value string) *map[string]interface{} {
+	query := map[string]interface{}{
+		"query": map[string]interface{}{
+			"bool": map[string]interface{}{
+				"must": map[string]interface{}{
+					"term": map[string]interface{}{
+						key: value,
+					},
+				},
+			},
+		},
 	}
-	var b strings.Builder
-	b.WriteString(query)
-	read := strings.NewReader(b.String())
-
-	return read
+	return &query
 }
