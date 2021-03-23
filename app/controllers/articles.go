@@ -53,7 +53,7 @@ func UpdateArticle(c *gin.Context) {
 	return
 }
 
-func GetReadModel(c *gin.Context) {
+func GetArticleById(c *gin.Context) {
 	id := c.Param("id")
 	command := articles.GetArticleByAggregateIDQuery{AggregateID: id}
 	cmdDescriptor := cqrs.NewQueryMessage(&command)
