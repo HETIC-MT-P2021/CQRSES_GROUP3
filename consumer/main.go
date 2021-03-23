@@ -20,6 +20,7 @@ func main() {
 	var queues []es.Typology
 	queues = append(queues, es.Create)
 	queues = append(queues, es.Put)
+	queues = append(queues, es.Delete)
 
 	createConsumersByEventTypologies(queues)
 }
@@ -45,17 +46,8 @@ func decodeAndPersistArticle(data interface{})  {
 	if err != nil {
 		log.Error("Error while decoding event: ", err)
 	}
-	switch eventStruct.Typology {
-	case es.Create:
-		err = repositories.PersistArticleEvent(&eventStruct)
-		if err != nil {
-			log.Error("Error while persisting event: ", err)
-		}
-	case es.Put:
-		err = repositories.PersistArticleVersionEvent(eventStruct.AggregateID,&eventStruct)
-		if err != nil {
-			log.Error("Error while persisting versioning event: ", err)
-		}
+	err = repositories.PersistArticleEvent(&eventStruct)
+	if err != nil {
+		log.Error("Error while persisting event: ", err)
 	}
-
 }
