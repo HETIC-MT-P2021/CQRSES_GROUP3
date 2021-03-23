@@ -13,7 +13,12 @@ func Init(r *gin.Engine) {
 
 	api := r.Group("/api")
 	api.GET("/search/:id", controllers.TestSearchService)
-	api.GET("/articles/:id", controllers.GetReadModel)
+	api.GET("/articles/:id", controllers.GetArticleById)
+
+	// Only for test without auth middleware
+	api.POST("/articles", controllers.CreateArticle)
+	api.POST("/articles/:id", controllers.UpdateArticle)
+
 	api.Use(middlewares.CheckAuthorization)
 	{
 		api.GET("/", controllers.TestController)
