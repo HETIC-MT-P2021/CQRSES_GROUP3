@@ -1,6 +1,7 @@
 # CQRSES_GROUP3
 
 A repository to train on event sourcing, CQRS and DDD.
+[Google Drive for CQRSES_GROUP3](https://drive.google.com/drive/folders/1YXihm3yICXDTGh6KhaKwunQL6gave4u4?usp=sharing)
 
 ## Project setup
 
