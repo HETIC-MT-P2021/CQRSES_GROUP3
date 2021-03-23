@@ -53,16 +53,21 @@ func UpdateArticle(c *gin.Context) {
 	return
 }
 
+type ArticleResponse struct {
+	Article 	interface{}
+	LastIndex int
+}
+
 func GetArticleById(c *gin.Context) {
 	id := c.Param("id")
 	query := articles.GetArticleByAggregateIDQuery{AggregateID: id}
 	queryDescriptor := cqrs.NewQueryMessage(&query)
-	article, err := domain.Qb.Dispatch(queryDescriptor)
+	article, err, lastIndex := domain.Qb.Dispatch(queryDescriptor)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusOK, article)
+	c.JSON(http.StatusOK, ArticleResponse{Article: article, LastIndex: lastIndex})
 	return
 }
 
