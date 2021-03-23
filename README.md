@@ -64,6 +64,8 @@ Content-Type: application/json
 }
 ```
 
+> Please note that the token is set inside your cookies and that you need to place it inside the `Authorization` header of your request, prefixed by 'Bearer ' (the space is important).
+
 ### Articles
 
 Get article
