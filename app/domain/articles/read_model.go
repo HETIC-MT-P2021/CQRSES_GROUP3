@@ -21,10 +21,17 @@ type ArticleReadModel struct {
 func (r *ReadModel) ProjectNewReadModel() (models.Article, error, int) {
 	var articleStruct models.Article
 	eventList, err := repositories.GetArticleEventByAggregateId(r.AggregateID)
+
 	if err != nil {
 		return models.Article{}, err, 0
 	}
 
+	// Sort slice by CreatedAt time.
+	sort.SliceStable(eventList, func (i, j int) bool {
+		return eventList[i].CreatedAt.Before(eventList[j].CreatedAt)
+	})
+
+	// Sort slice by Index.
 	sort.SliceStable(eventList, func (i, j int) bool {
 		return eventList[i].Index < eventList[j].Index
 	})
