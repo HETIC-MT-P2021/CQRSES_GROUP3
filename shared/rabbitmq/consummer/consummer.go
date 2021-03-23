@@ -22,7 +22,7 @@ func (cqs *ConsumeQueueService) Consume(results chan<- interface{}) {
 	cfg := rabbitmq.Config{
 		URL:        url,
 		QueueName:  cqs.Queue,
-		Exchange:   "event",
+		Exchange:   "",
 		RoutingKey: "#",
 	}
 	queue, err := rabbitmq.NewQueueInstance(cfg)

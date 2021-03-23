@@ -17,7 +17,7 @@ type RabbitmqTestSuite struct {
 // SetupTest Injects create queue instance with necessary config.
 // Assign the RabbitmqTestSuite's queue property.
 func (s *RabbitmqTestSuite) SetupTest() {
-	q, err := NewQueueInstance(Config{
+	q, err := NewQueueInstanceWithBinding(Config{
 		URL:        "amqp://user:bitnami@localhost:5672",
 		Exchange:   "test_exchange",
 		QueueName:  "test_queuename",

@@ -1,6 +1,8 @@
 package rabbitmq
 
-import "github.com/streadway/amqp"
+import (
+	"github.com/streadway/amqp"
+)
 
 // Config parameters for queue service
 type Config struct {
@@ -25,8 +27,30 @@ type Service interface {
 	Close() error
 }
 
-// NewQueueInstance set up all the necessary instances to pass messages to the broker.
+// NewQueueInstance set up the necessary queue instance to pass messages to the broker.
 func NewQueueInstance(config Config) (*Rabbitmq, error) {
+	conn, err := amqp.Dial(config.URL)
+	if err != nil {
+		return nil, err
+	}
+	ch, err := conn.Channel()
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := NewQueue(ch, config.QueueName); err != nil {
+		return nil, err
+	}
+
+	return &Rabbitmq{
+		conn:    conn,
+		channel: ch,
+		config:  config,
+	}, nil
+}
+
+// NewQueueInstanceWithBinding set up all the necessary instances to pass messages to the broker.
+func NewQueueInstanceWithBinding(config Config) (*Rabbitmq, error) {
 	conn, err := amqp.Dial(config.URL)
 	if err != nil {
 		return nil, err
@@ -39,7 +63,7 @@ func NewQueueInstance(config Config) (*Rabbitmq, error) {
 		return nil, err
 	}
 
-	if err := NewQueue(ch, config.Exchange, config.QueueName, config.BindingKey); err != nil {
+	if err := NewQueueWithBinding(ch, config.Exchange, config.QueueName, config.BindingKey); err != nil {
 		return nil, err
 	}
 
@@ -49,6 +73,8 @@ func NewQueueInstance(config Config) (*Rabbitmq, error) {
 		config:  config,
 	}, nil
 }
+
+
 
 // NewExchange declare a new rabbit Exchange.
 func NewExchange(c *amqp.Channel, name string) error {
@@ -63,8 +89,8 @@ func NewExchange(c *amqp.Channel, name string) error {
 	)
 }
 
-// NewExchange declare a new rabbit Queue and bing it to the Exchange channel.
-func NewQueue(ch *amqp.Channel, exchange string, name string, bindingKey string) error {
+// NewQueue declare a new rabbit Queue.
+func NewQueue(ch *amqp.Channel, name string) (amqp.Queue, error) {
 	q, err := ch.QueueDeclare(
 		name,
 		true,
@@ -74,9 +100,18 @@ func NewQueue(ch *amqp.Channel, exchange string, name string, bindingKey string)
 		nil,
 	)
 	if err != nil {
-		return err
+		return q, err
 	}
 
+	return q, nil
+}
+
+// NewQueueWithBinding declare a new rabbit Queue and bing it to the Exchange channel.
+func NewQueueWithBinding(ch *amqp.Channel, exchange string, name string, bindingKey string) error {
+	q, err := NewQueue(ch, name)
+	if err != nil {
+		return err
+	}
 	return ch.QueueBind(
 		q.Name,
 		bindingKey,
@@ -94,6 +129,7 @@ func (r *Rabbitmq) Publish(message []byte) error {
 		false,
 		false,
 		amqp.Publishing{
+			ContentType: "application/json",
 			Body: message,
 		},
 	)
@@ -120,7 +156,7 @@ func (r *Rabbitmq) Consume() (<-chan []byte, error) {
 			deliveries <- msg.Body
 		}
 	}()
-	return (<-chan []byte)(deliveries), nil
+	return deliveries, nil
 }
 
 // Close rabbitmq connection
