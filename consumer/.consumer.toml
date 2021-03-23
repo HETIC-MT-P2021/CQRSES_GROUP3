@@ -14,8 +14,6 @@ bin = "tmp/main"
 full_bin = "APP_ENV=dev APP_USER=air ./tmp/main"
 # Watch these filename extensions.
 include_ext = ["go"]
-# Ignore these filename extensions or directories.
-exclude_dir = ["tmp"]
 # Watch these directories if you specified.
 include_dir = []
 # Exclude files.
