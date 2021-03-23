@@ -26,11 +26,11 @@ func PersistArticleEvent(event *es.Event) error {
 func GetArticleEventByAggregateId(id string) ([]*es.Event, error) {
 	//var article models.Article
 	//var articleList []*models.Article
-	var event es.Event
 	var eventList []*es.Event
 	query := services.ConstructBoolQuery("AggregateID", id)
 	srl := services.SearchWithKeyword("article", query)
 	for _, sr := range srl {
+		var event es.Event
 		payload := sr.Body.(map[string]interface{})
 		err := helpers.Decode(payload, &event)
 		if err != nil {
