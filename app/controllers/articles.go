@@ -7,6 +7,7 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	log "github.com/sirupsen/logrus"
 )
 
 // CreateArticle is the controller to handle the creation of an article
@@ -67,6 +68,13 @@ func GetArticleById(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
+
+	emptyArticle := models.Article{}
+	if article == emptyArticle {
+		c.JSON(http.StatusNotFound, "Article does not exist")
+		return
+	}
+
 	c.JSON(http.StatusOK, ArticleResponse{Article: article, LastIndex: lastIndex})
 	return
 }
@@ -78,6 +86,7 @@ func DeleteArticleById(c *gin.Context) {
 
 	_, err := domain.Cb.Dispatch(cmdDescriptor)
 	if err != nil {
+		log.Error(err)
 		c.JSON(http.StatusInternalServerError, "Couldn't delete the article")
 		return
 	}
