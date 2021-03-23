@@ -54,7 +54,7 @@ func UpdateArticle(c *gin.Context) {
 }
 
 type ArticleResponse struct {
-	Article 	interface{}
+	Article   interface{}
 	LastIndex int
 }
 

@@ -74,8 +74,6 @@ func NewQueueInstanceWithBinding(config Config) (*Rabbitmq, error) {
 	}, nil
 }
 
-
-
 // NewExchange declare a new rabbit Exchange.
 func NewExchange(c *amqp.Channel, name string) error {
 	return c.ExchangeDeclare(
@@ -130,7 +128,7 @@ func (r *Rabbitmq) Publish(message []byte) error {
 		false,
 		amqp.Publishing{
 			ContentType: "application/json",
-			Body: message,
+			Body:        message,
 		},
 	)
 }

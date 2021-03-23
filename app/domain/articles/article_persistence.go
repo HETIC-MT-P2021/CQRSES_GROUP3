@@ -27,7 +27,7 @@ func validateAndPublishArticleEvent(articleForm *models.ArticleForm) (models.Art
 		CreatedAt:   time.Now(),
 		Index:       1, // First event for this article so the index should be 1
 	}
-	
+
 	queue := producer.QueueService{
 		Queue: string(event.Typology),
 		Data:  event,
@@ -75,15 +75,15 @@ func validateAndPublishArticleVersion(aggregateId string, articleForm *models.Ar
 func publishDeleteArticleEvent(aggregateID string) error {
 	event := es.Event{
 		AggregateID: aggregateID,
-		Typology: es.Delete,
-		Payload: models.Article{},
-		CreatedAt: time.Now(),
-		Index: 1,
+		Typology:    es.Delete,
+		Payload:     models.Article{},
+		CreatedAt:   time.Now(),
+		Index:       1,
 	}
 
 	queue := producer.QueueService{
 		Queue: string(event.Typology),
-		Data: event,
+		Data:  event,
 	}
 
 	return queue.NewSendToRabbit()

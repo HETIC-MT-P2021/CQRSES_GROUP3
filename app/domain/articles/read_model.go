@@ -27,19 +27,19 @@ func (r *ReadModel) ProjectNewReadModel() (models.Article, error, int) {
 	}
 
 	// Sort slice by CreatedAt time.
-	sort.SliceStable(eventList, func (i, j int) bool {
+	sort.SliceStable(eventList, func(i, j int) bool {
 		return eventList[i].CreatedAt.Before(eventList[j].CreatedAt)
 	})
 
 	// Sort slice by Index.
-	sort.SliceStable(eventList, func (i, j int) bool {
+	sort.SliceStable(eventList, func(i, j int) bool {
 		return eventList[i].Index < eventList[j].Index
 	})
 
-	readModel := models.Article {
-		AuthorID: 0,
-		Title: "",
-		Content: "",
+	readModel := models.Article{
+		AuthorID:  0,
+		Title:     "",
+		Content:   "",
 		CreatedAt: time.Now(),
 	}
 

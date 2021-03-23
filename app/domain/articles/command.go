@@ -14,7 +14,7 @@ type EditArticleCommand struct {
 	AggregateId string
 	ArticleForm models.ArticleForm
 }
-type DeleteArticleCommand struct{
+type DeleteArticleCommand struct {
 	AggregateID string
 }
 
@@ -27,7 +27,7 @@ func (ach *ArticleCommandHandler) Handle(command cqrs.CommandMessage) (interface
 		if err != nil {
 			return nil, err
 		}
-		return article, err 
+		return article, err
 	case *EditArticleCommand:
 		article, err := validateAndPublishArticleVersion(cmd.AggregateId, &cmd.ArticleForm)
 		if err != nil {
