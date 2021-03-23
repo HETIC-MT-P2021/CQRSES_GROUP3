@@ -11,6 +11,7 @@ type Article struct {
 	Title     string
 	Content   string
 	CreatedAt time.Time
+	AggregateID string
 }
 
 // ArticleForm represents the informations needed to create an article

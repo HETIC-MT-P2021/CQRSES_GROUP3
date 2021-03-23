@@ -13,7 +13,10 @@ func validateAndPublishArticleEvent(articleForm *models.ArticleForm) (models.Art
 		return models.Article{}, err
 	}
 
+	aggregateID := uuid.NewV4().String()
+
 	article := models.Article{
+		AggregateID: aggregateID,
 		AuthorID:  articleForm.AuthorID,
 		Title:     articleForm.Title,
 		Content:   articleForm.Content,
@@ -21,7 +24,7 @@ func validateAndPublishArticleEvent(articleForm *models.ArticleForm) (models.Art
 	}
 
 	event := es.Event{
-		AggregateID: uuid.NewV4().String(),
+		AggregateID: aggregateID,
 		Typology:    es.Create,
 		Payload:     article,
 		CreatedAt:   time.Now(),
