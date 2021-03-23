@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/rabbitmq"
+	log "github.com/sirupsen/logrus"
 	"os"
 )
 
@@ -19,6 +20,9 @@ func (cqs *ConsumeQueueService) Consume(results chan<- interface{}) {
 	if url == "" {
 		url = "amqp://user:bitnami@rabbitmq:5672"
 	}
+
+	log.Info(" CONSUMING QUEUE:", cqs.Queue)
+
 	cfg := rabbitmq.Config{
 		URL:        url,
 		QueueName:  cqs.Queue,
