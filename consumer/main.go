@@ -11,10 +11,10 @@ import (
 
 func main() {
 	log.Info("Consuming queues")
-	ecfg := database.EsCfg{Url: "http://es:9200"}
+	ecfg := database.EsCfg{Url: "http://localhost:9200"}
 	database.GetESClient(&ecfg)
 	resultsChannel := make(chan interface{})
-	cqs := consummer.ConsumeQueueService{Queue: string(es.Create)}
+	cqs := consummer.ConsumeQueueService{Queue: string(es.Put)}
 	go cqs.Consume(resultsChannel)
 	for data := range resultsChannel {
 		decodeAndPersistArticle(data)
@@ -27,10 +27,17 @@ func decodeAndPersistArticle(data interface{})  {
 	if err != nil {
 		log.Error("Error while decoding event: ", err)
 	}
-	log.Info(&eventStruct)
-
-	err = repositories.PersistArticleEvent(&eventStruct)
-	if err != nil {
-		log.Error("Error while persisting event: ", err)
+	switch eventStruct.Typology {
+	case es.Create:
+		err = repositories.PersistArticleEvent(&eventStruct)
+		if err != nil {
+			log.Error("Error while persisting event: ", err)
+		}
+	case es.Put:
+		err = repositories.PersistArticleVersionEvent(eventStruct.AggregateID,&eventStruct)
+		if err != nil {
+			log.Error("Error while persisting versioning event: ", err)
+		}
 	}
+
 }
