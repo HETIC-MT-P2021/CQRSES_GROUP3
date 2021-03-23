@@ -11,6 +11,43 @@ then simply run `make init`
 
 If you need more informations about the available make commands just run `make help`
 
+### Docker Setup
+
+Refer to the [DOCKER.md](DOCKER.md) for setup
+
+
+## Useful resources
+
+Google Drive: [CQRSES_GROUP3](https://drive.google.com/drive/folders/1YXihm3yICXDTGh6KhaKwunQL6gave4u4?usp=sharing)
+> All the technical documentations and schemes.
+
+[Specifications board](https://github.com/HETIC-MT-P2021/CQRSES_GROUP3/projects/1)
+> All the Epic and User stories
+
+[Application board](https://github.com/HETIC-MT-P2021/CQRSES_GROUP3/projects/2)
+> All the technical tasks
+
+## Specification process
+
+1. The process follow a simple logic: first we create an Epic issue in the [specifications board](https://github.com/HETIC-MT-P2021/CQRSES_GROUP3/projects/1) to reference all the correspondent User/Dev-Stories. Some of them are focused for developers, others for users.
+2. Those Epic issues will be described with their initiatives and goals and captures a large amount of work granularized into User/Dev-stories.
+3. Then the User/Dev-stories will be created with the desired behaviour for a specific feature.
+4. Finally, the User/Dev-stories will be breakdown into technical tasks referenced as feature request in the issues list.
+
+> All of those issues follow the stages `Todo`, `In Progress`, `Done`
+
+## Development process
+
+1. Most of the time a ticket on the [application board](https://github.com/HETIC-MT-P2021/CQRSES_GROUP3/projects/2) in the `Todo` column is assign to a team member.
+2. When a member starts working on the ticket, he should move the concerned ticket to `In Progress`.
+3. Then he creates a branch specifically for this ticket with a name that follows the [conventions specified below](#branch-naming-convention).
+4. Commit regularly at each significant step with unambiguous commit messages (see [COMMIT_CONVENTIONS](COMMIT_CONVENTIONS.md) file).
+5. Create a merge request that follows the [conventions specified below](#pull-requests-pr) to the develop branch.
+6. On the [application board](https://github.com/HETIC-MT-P2021/CQRSES_GROUP3/projects/2), move the ticket to the status `In Review`
+7. Assign the merge request to a maintainer
+8. It may take some back and forth before your pull request will be validated
+9. Your pull request will be then merged into develop branch and the concerned ticket will be moved to `Done`
+
 ## Tests
 
 You can run tests using the `make test` command.
