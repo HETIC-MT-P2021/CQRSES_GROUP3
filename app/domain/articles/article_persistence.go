@@ -71,3 +71,20 @@ func validateAndPublishArticleVersion(aggregateId string, articleForm *models.Ar
 
 	return article, nil
 }
+
+func publishDeleteArticleEvent(aggregateID string) error {
+	event := es.Event{
+		AggregateID: aggregateID,
+		Typology: es.Delete,
+		Payload: models.Article{},
+		CreatedAt: time.Now(),
+		Index: 1,
+	}
+
+	queue := producer.QueueService{
+		Queue: string(event.Typology),
+		Data: event,
+	}
+
+	return queue.NewSendToRabbit()
+}

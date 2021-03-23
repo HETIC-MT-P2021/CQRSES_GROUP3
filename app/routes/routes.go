@@ -31,6 +31,7 @@ func Init(r *gin.Engine) {
 		// Articles
 		v1.POST("/articles", controllers.CreateArticle)
 		v1.POST("/articles/:id", controllers.UpdateArticle)
+		v1.DELETE("/articles/:id", controllers.DeleteArticleById)
 
 	}
 }

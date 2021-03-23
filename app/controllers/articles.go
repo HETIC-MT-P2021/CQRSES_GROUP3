@@ -55,13 +55,27 @@ func UpdateArticle(c *gin.Context) {
 
 func GetArticleById(c *gin.Context) {
 	id := c.Param("id")
-	command := articles.GetArticleByAggregateIDQuery{AggregateID: id}
-	cmdDescriptor := cqrs.NewQueryMessage(&command)
-	article, err := domain.Qb.Dispatch(cmdDescriptor)
+	query := articles.GetArticleByAggregateIDQuery{AggregateID: id}
+	queryDescriptor := cqrs.NewQueryMessage(&query)
+	article, err := domain.Qb.Dispatch(queryDescriptor)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 	c.JSON(http.StatusOK, article)
 	return
+}
+
+func DeleteArticleById(c *gin.Context) {
+	id := c.Param("id")
+	command := articles.DeleteArticleCommand{AggregateID: id}
+	cmdDescriptor := cqrs.NewCommandMessage(&command)
+
+	_, err := domain.Cb.Dispatch(cmdDescriptor)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "Couldn't delete the article")
+		return
+	}
+
+	c.JSON(http.StatusOK, "Article deleted")
 }
