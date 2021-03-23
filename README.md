@@ -116,3 +116,38 @@ DELETE /api/v1/articles/:id
 | elasticsearch | 9200 | store the articles |
 | kibana | 5601 | manage elasticsearch |
 | rabbitmq | 15672 - 5672 | queuing system |
+
+## Contributors
+
+<table>
+  <tr>
+    <td align="center">
+    <a href="https://github.com/jasongauvin">
+      <img src="https://avatars1.githubusercontent.com/u/41618366?s=400&u=b970ed03cbb921ce1312ef86b39093e4fa0be7e3&v=4" width="100px;" alt=""/>
+      <br />
+      <sub><b>Jason Gauvin</b></sub>
+    </a>
+    </td>
+    <td align="center">
+    <a href="https://github.com/JackMaarek/">
+      <img src="https://avatars3.githubusercontent.com/u/28316928?s=400&u=3cdfb5b0683245ad333a39cfca3a5251f3829824&v=4" width="100px;" alt=""/>
+      <br />
+      <sub><b>Jacques Maarek</b></sub>
+    </a>
+    </td>
+    <td align="center">
+    <a href="https://github.com/Para0234">
+      <img src="https://avatars.githubusercontent.com/u/31258019?s=460&v=4" width="100px;" alt=""/>
+      <br />
+      <sub><b>Benoît Covet</b></sub>
+    </a>
+    </td>
+    <td align="center">
+    <a href="https://github.com/edwinvautier">
+      <img src="https://avatars3.githubusercontent.com/u/35581502?s=460&u=d9096f90151f35552d9adcd57bacaee366f0aaef&v=4" width="100px;" alt=""/>
+      <br />
+      <sub><b>Edwin Vautier</b></sub>
+    </a>
+    </td>
+  </tr>
+</table>
