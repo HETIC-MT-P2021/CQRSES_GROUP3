@@ -14,24 +14,32 @@ type EditArticleCommand struct {
 	AggregateId string
 	ArticleForm models.ArticleForm
 }
-type DeleteArticleCommand struct{}
+type DeleteArticleCommand struct {
+	AggregateID string
+}
 
 type ArticleCommandHandler struct{}
 
 func (ach *ArticleCommandHandler) Handle(command cqrs.CommandMessage) (interface{}, error) {
 	switch cmd := command.Payload().(type) {
 	case *CreateArticleCommand:
-		article, err := validateAndPersistArticle(&cmd.ArticleForm)
+		article, err := validateAndPublishArticleEvent(&cmd.ArticleForm)
 		if err != nil {
 			return nil, err
 		}
 		return article, err
 	case *EditArticleCommand:
-		article, err := validateAndUpdateArticle(cmd.AggregateId, &cmd.ArticleForm)
+		article, err := validateAndPublishArticleVersion(cmd.AggregateId, &cmd.ArticleForm)
 		if err != nil {
 			return nil, err
 		}
 		return article, err
+	case *DeleteArticleCommand:
+		err := publishDeleteArticleEvent(cmd.AggregateID)
+		if err != nil {
+			return nil, err
+		}
+		return nil, err
 	default:
 		return nil, nil
 	}

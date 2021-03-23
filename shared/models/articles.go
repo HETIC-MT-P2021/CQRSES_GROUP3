@@ -7,10 +7,11 @@ import (
 
 // Article model.
 type Article struct {
-	AuthorID  uint64
-	Title     string
-	Content   string
-	CreatedAt time.Time
+	AuthorID    uint64
+	Title       string
+	Content     string
+	CreatedAt   time.Time
+	AggregateID string
 }
 
 // ArticleForm represents the informations needed to create an article

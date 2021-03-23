@@ -6,6 +6,7 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/core/cqrs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -53,15 +54,42 @@ func UpdateArticle(c *gin.Context) {
 	return
 }
 
-func GetReadModel(c *gin.Context) {
+type ArticleResponse struct {
+	Article   interface{}
+	LastIndex int
+}
+
+func GetArticleById(c *gin.Context) {
 	id := c.Param("id")
-	command := articles.GetArticleByAggregateIDQuery{AggregateID: id}
-	cmdDescriptor := cqrs.NewQueryMessage(&command)
-	article, err := domain.Qb.Dispatch(cmdDescriptor)
+	query := articles.GetArticleByAggregateIDQuery{AggregateID: id}
+	queryDescriptor := cqrs.NewQueryMessage(&query)
+	article, err, lastIndex := domain.Qb.Dispatch(queryDescriptor)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusOK, article)
+
+	emptyArticle := models.Article{}
+	if article == emptyArticle {
+		c.JSON(http.StatusNotFound, "Article does not exist")
+		return
+	}
+
+	c.JSON(http.StatusOK, ArticleResponse{Article: article, LastIndex: lastIndex})
 	return
+}
+
+func DeleteArticleById(c *gin.Context) {
+	id := c.Param("id")
+	command := articles.DeleteArticleCommand{AggregateID: id}
+	cmdDescriptor := cqrs.NewCommandMessage(&command)
+
+	_, err := domain.Cb.Dispatch(cmdDescriptor)
+	if err != nil {
+		log.Error(err)
+		c.JSON(http.StatusInternalServerError, "Couldn't delete the article")
+		return
+	}
+
+	c.JSON(http.StatusOK, "Article deleted")
 }

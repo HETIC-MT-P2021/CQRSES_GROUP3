@@ -18,34 +18,49 @@ type ArticleReadModel struct {
 	ReadModel ReadModel
 }
 
-func (r *ReadModel) ProjectNewReadModel() (models.Article, error) {
+func (r *ReadModel) ProjectNewReadModel() (models.Article, error, int) {
 	var articleStruct models.Article
 	eventList, err := repositories.GetArticleEventByAggregateId(r.AggregateID)
+
 	if err != nil {
-		return models.Article{}, err
+		return models.Article{}, err, 0
 	}
 
-	sort.SliceStable(eventList, func (i, j int) bool {
+	// Sort slice by CreatedAt time.
+	sort.SliceStable(eventList, func(i, j int) bool {
+		return eventList[i].CreatedAt.Before(eventList[j].CreatedAt)
+	})
+
+	// Sort slice by Index.
+	sort.SliceStable(eventList, func(i, j int) bool {
 		return eventList[i].Index < eventList[j].Index
 	})
 
-	readModel := models.Article {
-		AuthorID: 0,
-		Title: "",
-		Content: "",
+	readModel := models.Article{
+		AuthorID:  0,
+		Title:     "",
+		Content:   "",
 		CreatedAt: time.Now(),
 	}
-	
+
+	lastPlayedIndex := 0
+
 	for _, event := range eventList {
 		article := event.Payload.(map[string]interface{})
 		err := helpers.Decode(article, &articleStruct)
 		if err != nil {
-			return models.Article{}, err
+			return models.Article{}, err, 0
 		}
+		lastPlayedIndex = int(event.Index)
+		// if delete event return nil article
+		if string(event.Typology) == "delete" {
+			return models.Article{}, nil, 0
+		}
+
 		applyChanges(&readModel, &articleStruct)
 	}
 
-	return readModel, nil
+	return readModel, nil, lastPlayedIndex
 }
 
 func applyChanges(old *models.Article, new *models.Article) {

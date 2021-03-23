@@ -22,11 +22,11 @@ func NewQueryBus() *QueryBus {
 	return cBus
 }
 
-func (b *QueryBus) Dispatch(query QueryMessage) (interface{}, error) {
+func (b *QueryBus) Dispatch(query QueryMessage) (interface{}, error, int) {
 	if handler, ok := b.handlers[query.QueryType()]; ok {
 		return handler.Handle(query)
 	}
-	return nil, fmt.Errorf("the query bus does not have a handler for query of type: %s", query.QueryType())
+	return nil, fmt.Errorf("the query bus does not have a handler for query of type: %s", query.QueryType()), 0
 }
 
 func (b *QueryBus) RegisterHandler(handler QueryHandler, query interface{}) error {

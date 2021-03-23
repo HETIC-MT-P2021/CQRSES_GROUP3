@@ -37,7 +37,7 @@ The naming of the PR should follow the same rules as the [COMMIT_CONVENTIONS](CO
 
 We use go linter [gofmt](https://blog.golang.org/gofmt) to automatically formats the source code.
 
-## Documentation
+## API Documentation
 
 ### Account
 
@@ -67,10 +67,16 @@ Content-Type: application/json
 
 ### Articles
 
+Get article
+
+```http request
+GET /api/articles/:id
+```
+
 Create new article
 
 ```http request
-POST /api/v1/articles
+POST /api/articles
 Content-Type: application/json
 {
     "AuthorID": 1,
@@ -79,11 +85,32 @@ Content-Type: application/json
 }
 ```
 
+Update an existing article
+
+```http request
+POST /api/articles/:id
+Content-Type: application/json
+{
+    "AuthorID": 1,
+    "Title": "The best article you'll read today",
+    "Content": "In fact it's the best article because it's only one line."
+}
+```
+
+Delete article
+
+```http request
+DELETE /api/articles/:id
+```
+
 ## Stack
 
 | tool | port | note |
 | - | - | - |
 | postgres | 5432 | store the users |
 | go | 8000 | the app |
+| go | 8082 | the consumer |
 | adminer | 8080 | administrate the db |
-| elasticsearch | 5432 | store the articles |
+| elasticsearch | 9200 | store the articles |
+| kibana | 5601 | manage elasticsearch |
+| rabbitmq | 15672 - 5672 | queuing system |

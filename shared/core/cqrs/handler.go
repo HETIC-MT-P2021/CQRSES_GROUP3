@@ -5,5 +5,5 @@ type CommandHandler interface {
 }
 
 type QueryHandler interface {
-	Handle(QueryMessage) (interface{}, error)
+	Handle(QueryMessage) (interface{}, error, int)
 }

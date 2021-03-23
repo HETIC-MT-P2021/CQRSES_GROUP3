@@ -13,7 +13,13 @@ func Init(r *gin.Engine) {
 
 	api := r.Group("/api")
 	api.GET("/search/:id", controllers.TestSearchService)
-	api.GET("/articles/:id", controllers.GetReadModel)
+	api.GET("/articles/:id", controllers.GetArticleById)
+
+	// Only for test without auth middleware
+	api.POST("/articles", controllers.CreateArticle)
+	api.POST("/articles/:id", controllers.UpdateArticle)
+	api.DELETE("/articles/:id", controllers.DeleteArticleById)
+
 	api.Use(middlewares.CheckAuthorization)
 	{
 		api.GET("/", controllers.TestController)
@@ -26,6 +32,7 @@ func Init(r *gin.Engine) {
 		// Articles
 		v1.POST("/articles", controllers.CreateArticle)
 		v1.POST("/articles/:id", controllers.UpdateArticle)
+		v1.DELETE("/articles/:id", controllers.DeleteArticleById)
 
 	}
 }

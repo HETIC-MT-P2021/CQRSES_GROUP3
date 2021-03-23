@@ -21,15 +21,14 @@ func (qs *QueueService) NewSendToRabbit() error {
 	cfg := rabbitmq.Config{
 		URL:        url,
 		QueueName:  qs.Queue,
-		Exchange:   "event",
-		RoutingKey: "#",
+		Exchange:   "",
+		RoutingKey: qs.Queue,
 	}
 	queue, err := rabbitmq.NewQueueInstance(cfg)
 	if err != nil {
 		fmt.Println("error declaring the new queue instance: " + err.Error())
 		return err
 	}
-	fmt.Println(qs.Data)
 	data, err := json.Marshal(qs.Data)
 	if err != nil {
 		fmt.Println("error in json conversion of event: " + err.Error())

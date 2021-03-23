@@ -8,8 +8,7 @@ for i in $(seq 1 $END); do
   ping=`ping -c 1 rabbitmq | grep bytes | wc -l`
 	if [ "$ping" -gt 1 ]; then
 		echo "Consummer Server Up"
-		cd consummer
-		exec /go/bin/air
+		exec air -c .consumer.toml
 	fi
 done
 echo "RabbitMQ server is down"
