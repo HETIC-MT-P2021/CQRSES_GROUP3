@@ -18,6 +18,7 @@ func Init(r *gin.Engine) {
 	// Only for test without auth middleware
 	api.POST("/articles", controllers.CreateArticle)
 	api.POST("/articles/:id", controllers.UpdateArticle)
+	api.DELETE("/articles/:id", controllers.DeleteArticleById)
 
 	api.Use(middlewares.CheckAuthorization)
 	{
