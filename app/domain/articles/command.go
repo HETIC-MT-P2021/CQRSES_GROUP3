@@ -27,7 +27,7 @@ func (ach *ArticleCommandHandler) Handle(command cqrs.CommandMessage) (interface
 		}
 		return article, err 
 	case *EditArticleCommand:
-		article, err := validateAndUpdateArticle(cmd.AggregateId, &cmd.ArticleForm)
+		article, err := validateAndPublishArticleVersion(cmd.AggregateId, &cmd.ArticleForm)
 		if err != nil {
 			return nil, err
 		}

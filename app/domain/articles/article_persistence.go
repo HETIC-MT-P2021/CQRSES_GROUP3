@@ -1,12 +1,10 @@
 package articles
 
 import (
-	"github.com/satori/go.uuid"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/core/es"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/rabbitmq/producer"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/repositories"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/core/es"
-	log "github.com/sirupsen/logrus"
+	"github.com/satori/go.uuid"
 	"time"
 )
 
@@ -34,10 +32,7 @@ func validateAndPublishArticleEvent(articleForm *models.ArticleForm) (models.Art
 		Queue: string(event.Typology),
 		Data:  event,
 	}
-	 
 	err := queue.NewSendToRabbit()
-	log.Error(err)
-
 	if err != nil {
 		return models.Article{}, err
 	}
@@ -45,7 +40,7 @@ func validateAndPublishArticleEvent(articleForm *models.ArticleForm) (models.Art
 	return article, nil
 }
 
-func validateAndUpdateArticle(aggregateId string, articleForm *models.ArticleForm) (models.Article, error) {
+func validateAndPublishArticleVersion(aggregateId string, articleForm *models.ArticleForm) (models.Article, error) {
 	if err := models.ValidateArticle(articleForm); err != nil {
 		return models.Article{}, err
 	}
@@ -57,7 +52,20 @@ func validateAndUpdateArticle(aggregateId string, articleForm *models.ArticleFor
 		CreatedAt: time.Now(),
 	}
 
-	if err := repositories.UpdateArticle(aggregateId, &article); err != nil {
+	event := es.Event{
+		AggregateID: aggregateId,
+		Typology:    es.Put,
+		Payload:     article,
+		CreatedAt:   time.Now(),
+		Index:       1, // First event for this article so the index should be 1
+	}
+
+	queue := producer.QueueService{
+		Queue: string(event.Typology),
+		Data:  event,
+	}
+	err := queue.NewSendToRabbit()
+	if err != nil {
 		return models.Article{}, err
 	}
 
