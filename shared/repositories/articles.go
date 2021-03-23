@@ -23,20 +23,6 @@ func PersistArticleEvent(event *es.Event) error {
 	return nil
 }
 
-func PersistArticleVersionEvent(aggregateId string, event *es.Event) error {
-	document := services.Document{
-		Body: event,
-	}
-
-	err := services.CreateNewDocumentInIndex("article", &document)
-	if err != nil {
-		log.Error("Error while creating event : ", err)
-		return err
-	}
-	log.Info("document created : ", document)
-	return nil
-}
-
 func GetArticleEventByAggregateId(id string) ([]*es.Event, error) {
 	//var article models.Article
 	//var articleList []*models.Article
