@@ -42,6 +42,12 @@ func (r *ReadModel) ProjectNewReadModel() (models.Article, error) {
 		if err != nil {
 			return models.Article{}, err
 		}
+
+		// if delete event return nil article
+		if string(event.Typology) == "delete" {
+			return models.Article{}, nil
+		}
+		
 		applyChanges(&readModel, &articleStruct)
 	}
 
