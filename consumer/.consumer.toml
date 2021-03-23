@@ -7,17 +7,17 @@ tmp_dir = "tmp"
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "go build -o ./tmp/main ."
+cmd = "go build -o ./tmp/main ./main.go"
 # Binary file yields from `cmd`.
 bin = "tmp/main"
 # Customize binary.
-full_bin = "APP_ENV=dev APP_USER=air ./tmp/main"
+full_bin = "./tmp/main"
 # Watch these filename extensions.
 include_ext = ["go"]
 # Watch these directories if you specified.
 include_dir = []
-# Exclude files.
-exclude_file = []
+# Exclude directories.
+exclude_dir = ["tmp"]
 # Exclude unchanged files.
 exclude_unchanged = true
 # This log file places in your tmp_dir.
