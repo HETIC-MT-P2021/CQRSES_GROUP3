@@ -5,13 +5,11 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/app/services"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/core/es"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/helpers"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
 	log "github.com/sirupsen/logrus"
-	"time"
 )
 
-// PersistArticle saves an article in es
-func PersistArticle(event *es.Event) error {
+// PersistArticleEvent saves an es.Event in es containing the article as a payload
+func PersistArticleEvent(event *es.Event) error {
 	document := services.Document{
 		Body: event,
 	}
@@ -25,15 +23,9 @@ func PersistArticle(event *es.Event) error {
 	return nil
 }
 
-func UpdateArticle(aggregateId string, article *models.Article) error {
+func PersistArticleVersionEvent(aggregateId string, event *es.Event) error {
 	document := services.Document{
-		Body: &es.Event{
-			AggregateID: aggregateId,
-			Typology:    es.Put,
-			Payload:     article,
-			CreatedAt:   time.Now(),
-			Index:       1, // First event for this article so the index should be 1
-		},
+		Body: event,
 	}
 
 	err := services.CreateNewDocumentInIndex("article", &document)
