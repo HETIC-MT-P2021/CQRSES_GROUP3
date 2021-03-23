@@ -6,8 +6,8 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/core/cqrs"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	log "github.com/sirupsen/logrus"
+	"net/http"
 )
 
 // CreateArticle is the controller to handle the creation of an article

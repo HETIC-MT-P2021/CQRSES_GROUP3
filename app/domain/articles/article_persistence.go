@@ -17,10 +17,10 @@ func validateAndPublishArticleEvent(articleForm *models.ArticleForm) (models.Art
 
 	article := models.Article{
 		AggregateID: aggregateID,
-		AuthorID:  articleForm.AuthorID,
-		Title:     articleForm.Title,
-		Content:   articleForm.Content,
-		CreatedAt: time.Now(),
+		AuthorID:    articleForm.AuthorID,
+		Title:       articleForm.Title,
+		Content:     articleForm.Content,
+		CreatedAt:   time.Now(),
 	}
 
 	event := es.Event{
@@ -49,10 +49,10 @@ func validateAndPublishArticleVersion(aggregateId string, articleForm *models.Ar
 	}
 
 	article := models.Article{
-		AuthorID:  articleForm.AuthorID,
-		Title:     articleForm.Title,
-		Content:   articleForm.Content,
-		CreatedAt: time.Now(),
+		AuthorID:    articleForm.AuthorID,
+		Title:       articleForm.Title,
+		Content:     articleForm.Content,
+		CreatedAt:   time.Now(),
 		AggregateID: aggregateId,
 	}
 
