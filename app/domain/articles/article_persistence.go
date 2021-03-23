@@ -53,6 +53,7 @@ func validateAndPublishArticleVersion(aggregateId string, articleForm *models.Ar
 		Title:     articleForm.Title,
 		Content:   articleForm.Content,
 		CreatedAt: time.Now(),
+		AggregateID: aggregateId,
 	}
 
 	event := es.Event{
