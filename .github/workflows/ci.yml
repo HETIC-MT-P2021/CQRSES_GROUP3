@@ -33,7 +33,7 @@ jobs:
       run: go build -v ./app/main.go
 
     - name: Build Consummer app
-      run: go build -v ./consummer/main.go
+      run: go build -v ./consumer/main.go
 
     - name: Lint
       run: gofmt -e .
