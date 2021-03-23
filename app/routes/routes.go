@@ -15,11 +15,6 @@ func Init(r *gin.Engine) {
 	api.GET("/search/:id", controllers.TestSearchService)
 	api.GET("/articles/:id", controllers.GetArticleById)
 
-	// Only for test without auth middleware
-	api.POST("/articles", controllers.CreateArticle)
-	api.POST("/articles/:id", controllers.UpdateArticle)
-	api.DELETE("/articles/:id", controllers.DeleteArticleById)
-
 	api.Use(middlewares.CheckAuthorization)
 	{
 		api.GET("/", controllers.TestController)
