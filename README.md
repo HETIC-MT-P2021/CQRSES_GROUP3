@@ -49,8 +49,7 @@ Content-Type: application/json
 {
     "name": "John Doe",
     "email": "johndoe@gmail.com",
-    "password": "*********",
-    "admin": true
+    "password": "*********"
 }
 ```
 
@@ -70,13 +69,13 @@ Content-Type: application/json
 Get article
 
 ```http request
-GET /api/articles/:id
+GET /api/v1/articles/:id
 ```
 
 Create new article
 
 ```http request
-POST /api/articles
+POST /api/v1/articles
 Content-Type: application/json
 {
     "AuthorID": 1,
@@ -88,7 +87,7 @@ Content-Type: application/json
 Update an existing article
 
 ```http request
-POST /api/articles/:id
+POST /api/v1/articles/:id
 Content-Type: application/json
 {
     "AuthorID": 1,
@@ -100,7 +99,7 @@ Content-Type: application/json
 Delete article
 
 ```http request
-DELETE /api/articles/:id
+DELETE /api/v1/articles/:id
 ```
 
 ## Stack
