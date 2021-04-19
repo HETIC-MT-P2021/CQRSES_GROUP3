@@ -28,7 +28,7 @@ func (b *CommandBus) Dispatch(command CommandMessage) (interface{}, error) {
 }
 
 func (b *CommandBus) RegisterHandler(handler CommandHandler, command interface{}) error {
-	typeName := reflect.TypeOf(command).Elem().Name()
+	typeName := reflect.TypeOf(command).Name()
 	if _, ok := b.handlers[typeName]; ok {
 		return fmt.Errorf("duplicate command handler registration with command bus for command of type: %s", typeName)
 	}
@@ -49,7 +49,7 @@ func NewCommandMessage(command interface{}) *CommandDescriptor {
 }
 
 func (c *CommandDescriptor) CommandType() string {
-	return reflect.TypeOf(c.command).Elem().Name()
+	return reflect.TypeOf(c.command).Name()
 }
 
 // Command returns the actual command payload of the message.
