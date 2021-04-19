@@ -4,3 +4,4 @@ public.pem
 private.pem
 tmp
 .idea
+app/go-cov.log
