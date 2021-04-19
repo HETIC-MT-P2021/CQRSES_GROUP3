@@ -1,9 +1,10 @@
 package articles
 
 import (
+	"errors"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/core/es"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/helpers"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/repositories"
 	"sort"
 	"time"
 )
@@ -18,14 +19,12 @@ type ArticleReadModel struct {
 	ReadModel ReadModel
 }
 
-func (r *ReadModel) ProjectNewReadModel() (models.Article, error, int) {
+func (r *ReadModel) ProjectNewReadModel(eventList []*es.Event) (models.Article, error, int) {
 	var articleStruct models.Article
-	eventList, err := repositories.GetArticleEventByAggregateId(r.AggregateID)
 
-	if err != nil {
-		return models.Article{}, err, 0
+	if len(eventList) < 1 {
+		return models.Article{}, errors.New("event list is empty"), 0
 	}
-
 	// Sort slice by CreatedAt time.
 	sort.SliceStable(eventList, func(i, j int) bool {
 		return eventList[i].CreatedAt.Before(eventList[j].CreatedAt)
