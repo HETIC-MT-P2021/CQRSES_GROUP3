@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/helpers"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/repositories"
+	"github.com/caarlos0/env"
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
 
@@ -24,10 +27,15 @@ type Config struct {
 }
 
 // Init Initializes a db connection
-func Init(cfg Config) error {
+func Init() *repositories.Repository {
+	cfg := Config{}
+	if err := env.Parse(&cfg); err != nil {
+		log.Fatal(err)
+		helpers.DieOnError("database connection failed", err)
+	}
+
 	dbURL := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Name)
 	var tmpDb *gorm.DB
-	var err error
 
 	// Try connecting database 5 times
 	for test := 1; test <= 5; test++ {
@@ -42,11 +50,10 @@ func Init(cfg Config) error {
 		break
 	}
 	if err != nil {
-		return err
+		helpers.DieOnError("database connection failed", err)
 	}
 
-	Db = tmpDb
 	log.Info("Connected to database!")
 
-	return nil
+	return &repositories.Repository{Db: tmpDb}
 }

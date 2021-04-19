@@ -18,7 +18,7 @@ func TestDecode(t *testing.T) {
 		output decodeTest
 	}
 
-	dateTestFailure := map[string]interface{}{"date": "24O11996"}
+	dateTestFailure := map[string]interface{}{"date": "24 O11 996"}
 
 	dateTestSuccess := map[string]interface{}{"date": "24/01/1996"}
 

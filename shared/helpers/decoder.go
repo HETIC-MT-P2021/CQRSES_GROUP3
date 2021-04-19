@@ -1,14 +1,16 @@
 package helpers
 
 import (
-	"github.com/mitchellh/mapstructure"
 	"reflect"
 	"time"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 // Decode create a new hook in the mapstructure pkg for the decoder config.
 // Especially used to map a string to a time.Time type.
 func Decode(input interface{}, output interface{}) error {
+
 	stringToDateTimeHook := func(
 		f reflect.Type,
 		t reflect.Type,
@@ -28,6 +30,7 @@ func Decode(input interface{}, output interface{}) error {
 	if err != nil {
 		return err
 	}
+	
 	err = decoder.Decode(input)
 	if err != nil {
 		return err

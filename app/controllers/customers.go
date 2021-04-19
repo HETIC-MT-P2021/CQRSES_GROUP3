@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/app/services"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/repositories"
 	"net/http"
+
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/app/services"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/database"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/models"
 	"github.com/gin-gonic/gin"
@@ -29,8 +30,10 @@ func CreateCustomer(c *gin.Context) {
 		Email:          customerForm.Email,
 		HashedPassword: services.HashPassword(customerForm.Password),
 	}
+	
+	repository := database.Init()
 
-	if err := repositories.PersistCustomer(&customer); err != nil {
+	if err := repository.PersistCustomer(&customer); err != nil {
 		c.JSON(http.StatusInternalServerError, "Couldn't create user. Try again.")
 		return
 	}

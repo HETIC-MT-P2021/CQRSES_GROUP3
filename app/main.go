@@ -1,19 +1,19 @@
 package main
 
 import (
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/app/domain"
-	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/app/services"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/app/domain"
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/app/services"
 
 	"time"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/app/routes"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/database"
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP3/shared/helpers"
-	"github.com/caarlos0/env"
 	"github.com/gin-gonic/gin"
 	cors "github.com/itsjamie/gin-cors"
 	log "github.com/sirupsen/logrus"
@@ -22,14 +22,8 @@ import (
 func main() {
 
 	// Connect to database and execute migrations
-	cfg := database.Config{}
-	if err := env.Parse(&cfg); err != nil {
-		log.Fatal(err)
-	}
-
-	err := database.Init(cfg)
-	helpers.DieOnError("database connection failed", err)
-	database.Migrate()
+	repository := database.Init()
+	repository.Migrate()
 
 	// Setup router
 	router := gin.Default()
