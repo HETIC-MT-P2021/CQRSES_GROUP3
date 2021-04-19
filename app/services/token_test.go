@@ -63,6 +63,17 @@ func TestDecodeToken(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: " Test with token failure",
+			args: args{
+				tokenString: tokenTest,
+			},
+			want: &Claims{
+				Email: "contact.jason gauvin@gmail.com",
+			},
+			wantErr: true,
+		},
+
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
