@@ -35,21 +35,21 @@ func GetESClient(escfg *EsCfg) {
 func GetOriginalESClient() (*es.Client, error) {
 	cfg := es.Config{
 		Addresses: []string{
-			"http://es:9200",
+			"http://localhost:9200",
 		},
 	}
 
 	elsrch, err := es.NewClient(cfg)
 	if err != nil {
-		log.Error("Error creating the client: %s", err)
+		log.Errorf("Error creating the client: %s", err)
 	}
 	res, err := elsrch.Info()
 	if err != nil {
-		log.Error("Error getting response: %s", err)
+		log.Errorf("Error getting response: %s", err)
 	}
 
 	if err = res.Body.Close(); err != nil {
-		log.Error("Error closing connection: %s", err)
+		log.Errorf("Error closing connection: %s", err)
 	}
 	log.Info("Connected to elasticsearch")
 

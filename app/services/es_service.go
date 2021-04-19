@@ -44,7 +44,7 @@ func SearchWithKeyword(index string, query *map[string]interface{}) []*SearchRes
 	}
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
-		log.Error("Error encoding query: %s", err)
+		log.Fatalf("Error encoding query: %s", err.Error())
 		return nil
 	}
 	response, err := client.Search(
@@ -56,7 +56,7 @@ func SearchWithKeyword(index string, query *map[string]interface{}) []*SearchRes
 		client.Search.WithSize(10),
 	)
 	if err != nil {
-		log.Fatalf("Error getting response: %s", err)
+		log.Fatalf("Error getting response: %s", err.Error())
 		return nil
 	}
 	prettifyNotFoundError(response)
@@ -69,10 +69,10 @@ func prettifyNotFoundError(response *esapi.Response) {
 	if response.IsError() {
 		var error map[string]interface{}
 		if err := json.NewDecoder(response.Body).Decode(&error); err != nil {
-			log.Fatal("Error parsing the response body: %s", err)
+			log.Fatalf("Error parsing the response body: %s", err)
 		} else {
 			// Print the response status and error information.
-			log.Fatal("[%s] %s: %s",
+			log.Fatalf("[%s] %s: %s",
 				response.Status(),
 				error["error"].(map[string]interface{})["type"],
 				error["error"].(map[string]interface{})["reason"],
@@ -86,7 +86,7 @@ func prettifyNotFoundError(response *esapi.Response) {
 func mapSearchResults(response *esapi.Response) []*SearchResult {
 	var body map[string]interface{}
 	if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
-		log.Fatal("Error parsing the response body: %s", err)
+		log.Fatalf("Error parsing the response body: %s", err)
 	}
 	// Print the response status, number of results, and request duration.
 	log.Printf(
@@ -115,16 +115,16 @@ func CreateNewIndex(index string, mapping string) error {
 	ctx := context.Background()
 	exists, err := client.IndexExists(index).Do(ctx)
 	if exists {
-		log.Info("Index exist already: %s", index)
+		log.Infof("Index exist already: %s", index)
 		return nil
 	}
 	indexed, err := client.CreateIndex(index).BodyString(mapping).Do(ctx)
 	if err != nil {
-		log.Error("cannot create new index: %s", index)
+		log.Errorf("cannot create new index: %s", index)
 		return errors.New("cannot create new index: " + index)
 	}
 	if !indexed.Acknowledged {
-		log.Error("error while acknowledging index: %s", index)
+		log.Errorf("error while acknowledging index: %s", index)
 		return errors.New("error while acknowledging index: " + index)
 	}
 	return nil
@@ -148,7 +148,7 @@ func CreateNewDocumentInIndex(index string, document *Document) error {
 		Do(context.Background())
 
 	if err != nil {
-		log.Error("cannot insert document in index %s", index)
+		log.Errorf("cannot insert document in index %s", index)
 		return errors.New("cannot insert document in index: " + index)
 	}
 	log.Info(helpers.ParseStringToUint64(inserted.Id))
@@ -166,11 +166,11 @@ func GetDocumentById(index string, id string) (*Document, error) {
 		Do(ctx)
 
 	if err != nil {
-		log.Error("cannot fetch document with id: %s", id)
+		log.Errorf("cannot fetch document with id: %s", id)
 		return nil, errors.New("cannot fetch document with id: " + id)
 	}
 	if !document.Found {
-		log.Error("document not found with id: %s", id)
+		log.Errorf("document not found with id: %s", id)
 		return nil, errors.New("document not found with id: " + id)
 	}
 	_, err = client.Flush().Index(index).Do(ctx)
