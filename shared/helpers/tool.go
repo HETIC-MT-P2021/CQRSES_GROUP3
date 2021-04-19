@@ -15,3 +15,4 @@ func ParseStringToUint64(str string) uint64 {
 	}
 	return id
 }
+
