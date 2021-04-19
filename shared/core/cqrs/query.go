@@ -30,7 +30,7 @@ func (b *QueryBus) Dispatch(query QueryMessage) (interface{}, error, int) {
 }
 
 func (b *QueryBus) RegisterHandler(handler QueryHandler, query interface{}) error {
-	typeName := reflect.TypeOf(query).Elem().Name()
+	typeName := reflect.TypeOf(query).Name()
 	if _, ok := b.handlers[typeName]; ok {
 		return fmt.Errorf("duplicate query handler registration with query bus for query of type: %s", typeName)
 	}
@@ -51,7 +51,7 @@ func NewQueryMessage(query interface{}) *QueryDescriptor {
 }
 
 func (c *QueryDescriptor) QueryType() string {
-	return reflect.TypeOf(c.query).Elem().Name()
+	return reflect.TypeOf(c.query).Name()
 }
 
 // Command returns the actual command payload of the message.
